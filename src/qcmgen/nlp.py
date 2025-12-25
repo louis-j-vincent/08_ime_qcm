@@ -2,6 +2,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, List, Tuple
 import spacy
+from spacy.tokens import Span, Token
+
 
 _NLP = None
 
@@ -39,9 +41,10 @@ def extract_facts(text: str) -> List[Fact]:
         if root is not None:
             verb = root.lemma_ #forme canonique du verbe, + stable
 
-            # 2) sujet / objet parmi les enfants du ROOT
+            # 2) sujet (robuste) + objet parmi les enfants du ROOT
+            subj = robust_subj_extraction(sent)
+
             for child in root.children:
-                subj = robust_subj_extraction(sent)
                 if child.dep_ in ("obj", "iobj") and obj is None:
                     obj = " ".join(t.text for t in child.subtree) #gérer les objets composés (ex: "le ballon rouge" plutot que "ballon")
 
@@ -73,13 +76,18 @@ def robust_subj_extraction(sent: Span) -> Optional[Token]:
     # si pas de sujet trouvé, fallback: premier NOUN ou PROPN
     if subj is None:
         for token in sent:
-            if token.pos_ in ("NOUN", "PROPN"):
-                subj = " ".join(t.text for t in token.subtree) #gérer les sujets composés
+            if token.pos_ == "PROPN":
+                subj = " ".join(t.text for t in token.subtree)
+                break
+
+    if subj is None:
+        for token in sent:
+            if token.pos_ == "NOUN":
+                subj = " ".join(t.text for t in token.subtree)
                 break
 
     return subj
 
-from spacy.tokens import Span, Token
 def robust_root_extraction(sent: Span) -> Optional[Token]:
     """Extract the root verb of a sentence, with robustness to certain structures."""
 
