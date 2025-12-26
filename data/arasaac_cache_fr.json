@@ -34,7 +34,29 @@
   "chien": {
     "picto_id": 7202,
     "url": "https://static.arasaac.org/pictograms/7202/7202_500.png",
-    "score": 13.5
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "carnivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "pet",
+      "domestic",
+      "core vocabulary"
+    ],
+    "categories": [
+      "carnivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "pet",
+      "domestic animal",
+      "core vocabulary-living being"
+    ],
+    "keyword": "chien",
+    "plural": "chiens"
   },
   "cheval": {
     "picto_id": 2294,
@@ -64,5 +86,647 @@
     ],
     "keyword": "cheval",
     "plural": "chevaux"
+  },
+  "lion": {
+    "picto_id": 25187,
+    "url": "https://static.arasaac.org/pictograms/25187/25187_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "carnivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "wild",
+      "core vocabulary"
+    ],
+    "categories": [
+      "carnivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "wild animal",
+      "core vocabulary-living being"
+    ],
+    "keyword": "lion",
+    "plural": "lions"
+  },
+  "elephant": {
+    "picto_id": 2372,
+    "url": "https://static.arasaac.org/pictograms/2372/2372_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "herbivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "wild",
+      "domestic",
+      "core vocabulary"
+    ],
+    "categories": [
+      "herbivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "wild animal",
+      "domestic animal",
+      "core vocabulary-living being"
+    ],
+    "keyword": "éléphant",
+    "plural": "éléphants"
+  },
+  "oiseau": {
+    "picto_id": 2490,
+    "url": "https://static.arasaac.org/pictograms/2490/2490_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "herbivorous",
+      "vertebrate",
+      "bird",
+      "oviparous",
+      "flying animal",
+      "core vocabulary"
+    ],
+    "categories": [
+      "herbivorous",
+      "bird",
+      "oviparous",
+      "flying animal",
+      "core vocabulary-living being"
+    ],
+    "keyword": "oiseau",
+    "plural": "oiseaux"
+  },
+  "poisson": {
+    "picto_id": 2520,
+    "url": "https://static.arasaac.org/pictograms/2520/2520_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "carnivorous",
+      "herbivorous",
+      "omnivorous",
+      "vertebrate",
+      "fish",
+      "oviparous",
+      "ovoviviparous",
+      "aquatic animal",
+      "freshwater animal",
+      "river",
+      "marine animal",
+      "sea",
+      "core vocabulary"
+    ],
+    "categories": [
+      "carnivorous",
+      "herbivorous",
+      "omnivorous",
+      "fish-animal",
+      "oviparous",
+      "ovoviviparous",
+      "aquatic animal",
+      "river animal",
+      "marine animal",
+      "core vocabulary-living being"
+    ],
+    "keyword": "poisson",
+    "plural": "poissons"
+  },
+  "vache": {
+    "picto_id": 2609,
+    "url": "https://static.arasaac.org/pictograms/2609/2609_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "herbivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "work",
+      "primary sector",
+      "cattle farming",
+      "domestic",
+      "core vocabulary"
+    ],
+    "categories": [
+      "herbivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "cattle farming",
+      "domestic animal",
+      "core vocabulary-living being",
+      "core vocabulary-work"
+    ],
+    "keyword": "vache",
+    "plural": "vaches"
+  },
+  "mouton": {
+    "picto_id": 2489,
+    "url": "https://static.arasaac.org/pictograms/2489/2489_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "herbivorous",
+      "vertebrate",
+      "mammal",
+      "terrestrial animal",
+      "viviparous",
+      "work",
+      "primary sector",
+      "cattle farming",
+      "domestic",
+      "core vocabulary"
+    ],
+    "categories": [
+      "herbivorous",
+      "mammal",
+      "terrestrial animal",
+      "viviparous",
+      "cattle farming",
+      "domestic animal",
+      "core vocabulary-living being",
+      "core vocabulary-work"
+    ],
+    "keyword": "mouton",
+    "plural": "moutons"
+  },
+  "cochon": {
+    "picto_id": 24972,
+    "url": "https://static.arasaac.org/pictograms/24972/24972_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "omnivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "work",
+      "primary sector",
+      "cattle farming",
+      "domestic",
+      "core vocabulary"
+    ],
+    "categories": [
+      "omnivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "cattle farming",
+      "domestic animal",
+      "core vocabulary-living being",
+      "core vocabulary-work"
+    ],
+    "keyword": "cochon",
+    "plural": "cochons"
+  },
+  "lapin": {
+    "picto_id": 2351,
+    "url": "https://static.arasaac.org/pictograms/2351/2351_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "herbivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "work",
+      "primary sector",
+      "hunting",
+      "core vocabulary"
+    ],
+    "categories": [
+      "herbivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "hunting",
+      "core vocabulary-living being",
+      "core vocabulary-work"
+    ],
+    "keyword": "lapin",
+    "plural": "lapins"
+  },
+  "souris": {
+    "picto_id": 2546,
+    "url": "https://static.arasaac.org/pictograms/2546/2546_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "herbivorous"
+    ],
+    "categories": [
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "herbivorous"
+    ],
+    "keyword": "souris",
+    "plural": "souris"
+  },
+  "livre": {
+    "picto_id": 25191,
+    "url": "https://static.arasaac.org/pictograms/25191/25191_500.png",
+    "score": 13.5,
+    "tags": [
+      "education",
+      "educational material",
+      "library science",
+      "literature",
+      "core vocabulary"
+    ],
+    "categories": [
+      "educational material",
+      "library science",
+      "literature",
+      "core vocabulary-education",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "livre",
+    "plural": "livres"
+  },
+  "crayon": {
+    "picto_id": 2440,
+    "url": "https://static.arasaac.org/pictograms/2440/2440_500.png",
+    "score": 13.5,
+    "tags": [
+      "education",
+      "educational material",
+      "core vocabulary"
+    ],
+    "categories": [
+      "educational material",
+      "core vocabulary-education"
+    ],
+    "keyword": "crayon",
+    "plural": "crayons"
+  },
+  "cahier": {
+    "picto_id": 2359,
+    "url": "https://static.arasaac.org/pictograms/2359/2359_500.png",
+    "score": 13.5,
+    "tags": [
+      "education",
+      "educational material"
+    ],
+    "categories": [
+      "educational material"
+    ],
+    "keyword": "cahier",
+    "plural": "cahiers"
+  },
+  "stylo": {
+    "picto_id": 2282,
+    "url": "https://static.arasaac.org/pictograms/2282/2282_500.png",
+    "score": 13.5,
+    "tags": [
+      "education",
+      "educational material"
+    ],
+    "categories": [
+      "educational material"
+    ],
+    "keyword": "stylo",
+    "plural": "stylos"
+  },
+  "table": {
+    "picto_id": 3129,
+    "url": "https://static.arasaac.org/pictograms/3129/3129_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "furniture",
+      "core vocabulary"
+    ],
+    "categories": [
+      "furniture",
+      "core vocabulary-object"
+    ],
+    "keyword": "table",
+    "plural": "tables"
+  },
+  "chaise": {
+    "picto_id": 3155,
+    "url": "https://static.arasaac.org/pictograms/3155/3155_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "furniture",
+      "core vocabulary"
+    ],
+    "categories": [
+      "furniture",
+      "core vocabulary-object"
+    ],
+    "keyword": "chaise",
+    "plural": "chaises"
+  },
+  "ecole": {
+    "picto_id": 32446,
+    "url": "https://static.arasaac.org/pictograms/32446/32446_500.png",
+    "score": 13.5,
+    "tags": [
+      "education",
+      "building",
+      "place",
+      "communication",
+      "signaling system",
+      "core vocabulary"
+    ],
+    "categories": [
+      "educational building",
+      "educational_building",
+      "signaling system",
+      "core vocabulary-education",
+      "core vocabulary-place",
+      "core vocabulary-communication"
+    ],
+    "keyword": "collège",
+    "plural": "collèges"
+  },
+  "manger": {
+    "picto_id": 6456,
+    "url": "https://static.arasaac.org/pictograms/6456/6456_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "feeding",
+      "food",
+      "person",
+      "basic needs",
+      "core vocabulary",
+      "gastronomy"
+    ],
+    "categories": [
+      "verb",
+      "food",
+      "basic needs",
+      "core vocabulary-communication",
+      "gastronomy"
+    ],
+    "keyword": "manger",
+    "plural": null
+  },
+  "boire": {
+    "picto_id": 6061,
+    "url": "https://static.arasaac.org/pictograms/6061/6061_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "usual verbs",
+      "feeding",
+      "food",
+      "beverage",
+      "person",
+      "basic needs",
+      "core vocabulary"
+    ],
+    "categories": [
+      "usual verbs",
+      "beverage",
+      "basic needs",
+      "core vocabulary-communication"
+    ],
+    "keyword": "boire",
+    "plural": null
+  },
+  "dormir": {
+    "picto_id": 6479,
+    "url": "https://static.arasaac.org/pictograms/6479/6479_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "usual verbs",
+      "person",
+      "basic needs",
+      "routine",
+      "core vocabulary"
+    ],
+    "categories": [
+      "usual verbs",
+      "basic needs",
+      "routine",
+      "core vocabulary-communication"
+    ],
+    "keyword": "dormir",
+    "plural": null
+  },
+  "marcher": {
+    "picto_id": 8649,
+    "url": "https://static.arasaac.org/pictograms/8649/8649_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "usual verbs",
+      "core vocabulary"
+    ],
+    "categories": [
+      "usual verbs",
+      "core vocabulary-communication"
+    ],
+    "keyword": "se promener",
+    "plural": null
+  },
+  "courir": {
+    "picto_id": 6465,
+    "url": "https://static.arasaac.org/pictograms/6465/6465_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "usual verbs",
+      "leisure",
+      "sport",
+      "physical exercise",
+      "core vocabulary",
+      "animal",
+      "person"
+    ],
+    "categories": [
+      "usual verbs",
+      "physical exercise",
+      "core vocabulary-communication",
+      "animal",
+      "person according to their age"
+    ],
+    "keyword": "courir",
+    "plural": null
+  },
+  "jouer": {
+    "picto_id": 23392,
+    "url": "https://static.arasaac.org/pictograms/23392/23392_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "leisure",
+      "usual verbs",
+      "core vocabulary",
+      "game"
+    ],
+    "categories": [
+      "verb",
+      "game",
+      "usual verbs",
+      "core vocabulary-communication",
+      "core vocabulary-leisure"
+    ],
+    "keyword": "jouer",
+    "plural": null
+  },
+  "regarder": {
+    "picto_id": 6564,
+    "url": "https://static.arasaac.org/pictograms/6564/6564_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "usual verbs",
+      "human body",
+      "physiology",
+      "human physiology",
+      "senses",
+      "person",
+      "basic needs",
+      "core vocabulary"
+    ],
+    "categories": [
+      "usual verbs",
+      "senses",
+      "basic needs",
+      "core vocabulary-communication",
+      "core vocabulary-living being"
+    ],
+    "keyword": "voir",
+    "plural": null
+  },
+  "rouge": {
+    "picto_id": 2808,
+    "url": "https://static.arasaac.org/pictograms/2808/2808_500.png",
+    "score": 13.5,
+    "tags": [
+      "color"
+    ],
+    "categories": [
+      "color"
+    ],
+    "keyword": "rouge",
+    "plural": "rouges"
+  },
+  "bleu": {
+    "picto_id": 4869,
+    "url": "https://static.arasaac.org/pictograms/4869/4869_500.png",
+    "score": 13.5,
+    "tags": [
+      "color",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "color",
+      "core vocabulary-object"
+    ],
+    "keyword": "bleu",
+    "plural": "bleus"
+  },
+  "vert": {
+    "picto_id": 4887,
+    "url": "https://static.arasaac.org/pictograms/4887/4887_500.png",
+    "score": 13.5,
+    "tags": [
+      "color",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "color",
+      "core vocabulary-object"
+    ],
+    "keyword": "vert",
+    "plural": "verts"
+  },
+  "jaune": {
+    "picto_id": 2648,
+    "url": "https://static.arasaac.org/pictograms/2648/2648_500.png",
+    "score": 13.5,
+    "tags": [
+      "color",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "color",
+      "core vocabulary-object"
+    ],
+    "keyword": "jaune",
+    "plural": "jaunes"
+  },
+  "noir": {
+    "picto_id": 2886,
+    "url": "https://static.arasaac.org/pictograms/2886/2886_500.png",
+    "score": 13.5,
+    "tags": [
+      "color",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "color",
+      "core vocabulary-object"
+    ],
+    "keyword": "noir",
+    "plural": "noirs"
+  },
+  "blanc": {
+    "picto_id": 8043,
+    "url": "https://static.arasaac.org/pictograms/8043/8043_500.png",
+    "score": 13.5,
+    "tags": [
+      "color",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "color",
+      "core vocabulary-object"
+    ],
+    "keyword": "blanc",
+    "plural": null
+  },
+  "gris": {
+    "picto_id": 3340,
+    "url": "https://static.arasaac.org/pictograms/3340/3340_500.png",
+    "score": 13.5,
+    "tags": [
+      "color"
+    ],
+    "categories": [
+      "color"
+    ],
+    "keyword": "gris",
+    "plural": null
   }
 }
