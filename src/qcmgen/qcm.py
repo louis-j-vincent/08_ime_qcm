@@ -99,3 +99,17 @@ def build_choices(correct: str, pool_name: str, k: int = 3):
 def _normalize_answer(s: str) -> str:
     return " ".join(s.strip().split())
 
+def payload_to_qcm(payload: QcmPayload) -> QCM:
+    question = payload.template.format(**payload.template_vars) #remplir les variables du template
+
+    correct = _normalize_answer(payload.correct)
+    choices, answer_index = build_choices(correct, pool_name=payload.pool_name, k=3)
+
+    return QCM(
+        question=question,
+        choices=choices,
+        answer_index=answer_index,
+        qtype=payload.qtype,
+        rationale=payload.rationale
+    )   
+
