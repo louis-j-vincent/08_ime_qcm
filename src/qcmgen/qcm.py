@@ -36,3 +36,13 @@ QUESTION_SPECS = {
     },
 }
 
+from dataclasses import dataclass
+from typing import List, Optional, Tuple
+
+@dataclass
+class QCM:
+    question: str
+    choices: List[str]
+    answer_index: int
+    qtype: QuestionType
+    rationale: Optional[str] = None
