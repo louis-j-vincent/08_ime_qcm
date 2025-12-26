@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from enum import Enum
 import random
+from typing import Callable, Dict
+from qcmgen.nlp import Fact
+
 
 class QuestionType(str, Enum):
     """
@@ -100,7 +103,7 @@ def _normalize_answer(s: str) -> str:
     return " ".join(s.strip().split())
 
 def payload_to_qcm(payload: QcmPayload) -> QCM:
-    question = payload.template.format(**payload.template_vars) #remplir les variables du template
+    question = payload.template.format(**payload.template_vars) #remplir les variables du template (ex : "Que {verb} {subj} ?".format(verb="voir", subj="Martin") => "Que voir Martin ?") 
 
     correct = _normalize_answer(payload.correct)
     choices, answer_index = build_choices(correct, pool_name=payload.pool_name, k=3)
@@ -112,4 +115,98 @@ def payload_to_qcm(payload: QcmPayload) -> QCM:
         qtype=payload.qtype,
         rationale=payload.rationale
     )   
+
+# Fonctions d'expansion pour chaque type de question
+
+ExpandFn = Callable[[Fact], List[QcmPayload]] # Type alias pour les fonctions d'expansion
+
+def _expand_object(fact: Fact) -> List[QcmPayload]:
+    """Generate OBJECT question payloads from a Fact."""
+    if not (fact.subj and fact.verb and fact.obj):
+        return []
+    
+    spec = QUESTION_SPECS[QuestionType.OBJECT]
+    return [QcmPayload(
+        qtype=QuestionType.OBJECT,
+        template=spec["template"],
+        template_vars={
+            "verb": fact.verb,
+            "subj": fact.subj
+        },
+        correct=fact.obj,
+        pool_name=spec["pool"],
+        rationale=f"OBJECT from subj+verb+obj: {fact.sent_text} "
+    )]
+
+def _expand_subject(fact: Fact) -> List[QcmPayload]:
+    if not (fact.subj and fact.verb and fact.obj):
+        return []
+
+    spec = QUESTION_SPECS[QuestionType.SUBJECT]
+    return [
+        QcmPayload(
+            qtype=QuestionType.SUBJECT,
+            template=spec["template"],
+            template_vars={"verb": fact.verb, "obj": fact.obj},
+            correct=fact.subj,
+            pool_name=spec["pool"],
+            rationale="SUBJECT from subj+verb+obj",
+        )
+    ]
+
+def _expand_adj_noun(fact: Fact) -> List[QcmPayload]:
+    if not fact.adj_pairs:
+        return []
+
+    spec = QUESTION_SPECS[QuestionType.ADJ_NOUN]
+    payloads: List[QcmPayload] = []
+
+    for noun, adj in fact.adj_pairs:
+        payloads.append(
+            QcmPayload(
+                qtype=QuestionType.ADJ_NOUN,
+                template=spec["template"],
+                template_vars={"adj": adj},
+                correct=noun,
+                pool_name=spec["pool"],
+                rationale=f"ADJ_NOUN from pair noun={noun} adj={adj}",
+            )
+        )
+
+    return payloads
+
+EXPANDERS: Dict[QuestionType, ExpandFn] = {
+    QuestionType.OBJECT: _expand_object,
+    QuestionType.SUBJECT: _expand_subject,
+    QuestionType.ADJ_NOUN: _expand_adj_noun,
+}
+
+def generate_payloads(fact: Fact) -> List[QcmPayload]:
+    """Generate QcmPayloads from a Fact using all applicable expanders.
+    How it worlks: itère sur tous les types de questions définis dans EXPANDERS,
+    applique chaque fonction d'expansion au fact donné, et collecte tous les
+    payloads générés. Ensuite, il déduplique les payloads pour éviter les
+    doublons.
+    """
+
+    payloads: List[QcmPayload] = []
+
+    for qtype, expander in EXPANDERS.items():
+        payloads.extend(expander(fact))
+
+    # Déduplication simple
+    seen = set()
+    unique_payloads = []
+    for payload in payloads:
+        key = (payload.qtype, tuple(sorted(payload.template_vars.items())), payload.correct)
+        if key not in seen:
+            seen.add(key)
+            unique_payloads.append(payload)
+
+    return unique_payloads
+
+def generate_qcms(fact: Fact, max_qcms: int = 6) -> List[QCM]:
+    payloads = generate_payloads(fact)
+    qcms = [payload_to_qcm(p) for p in payloads]
+    return qcms[:max_qcms]
 
