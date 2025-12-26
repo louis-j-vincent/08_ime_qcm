@@ -122,7 +122,7 @@ ExpandFn = Callable[[Fact], List[QcmPayload]] # Type alias pour les fonctions d'
 
 def _expand_object(fact: Fact) -> List[QcmPayload]:
     """Generate OBJECT question payloads from a Fact."""
-    if not (fact.subj and fact.verb and fact.obj):
+    if not (fact.subj and fact.verb_text and fact.obj_phrase and fact.obj_head):
         return []
     
     spec = QUESTION_SPECS[QuestionType.OBJECT]
@@ -130,16 +130,16 @@ def _expand_object(fact: Fact) -> List[QcmPayload]:
         qtype=QuestionType.OBJECT,
         template=spec["template"],
         template_vars={
-            "verb": fact.verb,
+            "verb": fact.verb_text,
             "subj": fact.subj
         },
-        correct=fact.obj,
+        correct=fact.obj_head,
         pool_name=spec["pool"],
         rationale=f"OBJECT from subj+verb+obj: {fact.sent_text} "
     )]
 
 def _expand_subject(fact: Fact) -> List[QcmPayload]:
-    if not (fact.subj and fact.verb and fact.obj):
+    if not (fact.subj and fact.verb_text and fact.obj_phrase):
         return []
 
     spec = QUESTION_SPECS[QuestionType.SUBJECT]
@@ -147,7 +147,7 @@ def _expand_subject(fact: Fact) -> List[QcmPayload]:
         QcmPayload(
             qtype=QuestionType.SUBJECT,
             template=spec["template"],
-            template_vars={"verb": fact.verb, "obj": fact.obj},
+            template_vars={"verb": fact.verb_text, "obj": fact.obj_phrase},
             correct=fact.subj,
             pool_name=spec["pool"],
             rationale="SUBJECT from subj+verb+obj",
