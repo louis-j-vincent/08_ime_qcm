@@ -77,12 +77,26 @@ COLORS = [
     "gris", "rouge", "bleu", "vert", "jaune", "noir", "blanc", "orange", "rose"
 ]
 
+def _pluralize_animal(word: str) -> str:
+    exceptions = {
+        "cheval": "chevaux",
+        "animal": "animaux",
+    }
+    if word in exceptions:
+        return exceptions[word]
+    if word.endswith(("s", "x", "z")):
+        return word
+    return word + "s"
 
 POOLS = {
     "animals": ANIMALS,
     "people": PEOPLE,
     "colors": COLORS,
 }
+
+ANIMALS_PLUR = [_pluralize_animal(a) for a in ANIMALS]
+POOLS["animals_plur"] = ANIMALS_PLUR
+
 
 def build_choices(correct: str, pool_name: str, k: int = 3):
     """Build a list of k+1 choices including the correct answer and k distractors from the specified pool."""
@@ -161,14 +175,14 @@ def _expand_adj_noun(fact: Fact) -> List[QcmPayload]:
     spec = QUESTION_SPECS[QuestionType.ADJ_NOUN]
     payloads: List[QcmPayload] = []
 
-    for noun, adj in fact.adj_pairs:
+    for noun, adj, number in fact.adj_pairs:
         payloads.append(
             QcmPayload(
                 qtype=QuestionType.ADJ_NOUN,
-                template=spec["template"],
+                template=spec["template"] if number != "Plur" else "Quels animaux sont {adj} ?",
                 template_vars={"adj": adj},
                 correct=noun,
-                pool_name=spec["pool"],
+                pool_name=spec["pool"] if number != "Plur" else "animals_plur", #assuming its animals for now
                 rationale=f"ADJ_NOUN from pair noun={noun} adj={adj}",
             )
         )
