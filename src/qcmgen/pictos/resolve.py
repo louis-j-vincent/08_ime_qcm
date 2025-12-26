@@ -1,0 +1,195 @@
+## Done with ChatGPT
+
+import json
+import os
+import unicodedata
+from dataclasses import dataclass
+from typing import Optional, Dict, Any, List, Tuple
+
+from qcmgen.pictos.arasaac_client import ArasaacClient
+
+
+@dataclass(frozen=True)
+class ResolvedPicto:
+    term: str
+    picto_id: int
+    url: str
+    score: float
+    tags: List[str]
+    categories: List[str]
+    keyword: Optional[str] = None
+    plural: Optional[str] = None
+    source: str = "arasaac"
+
+
+def _strip_accents(s: str) -> str:
+    return "".join(
+        ch for ch in unicodedata.normalize("NFD", s)
+        if unicodedata.category(ch) != "Mn"
+    )
+
+
+def normalize_term(term: str) -> str:
+    term = term.strip().lower()
+    term = _strip_accents(term)
+    term = " ".join(term.split())
+    return term
+
+
+def _naive_singularize_fr(term: str) -> str:
+    # v0: suffisant pour "chats"->"chat". Ne pas sur-optimiser.
+    if term.endswith("s") and len(term) > 3:
+        return term[:-1]
+    return term
+
+
+def _extract_keywords(item: Dict[str, Any]) -> List[str]:
+    """
+    ARASAAC renvoie souvent un champ 'keywords' (liste), parfois sous forme:
+    - [{'keyword': 'chat', 'type': ...}, ...]
+    ou directement des strings selon versions.
+    """
+    kws = item.get("keywords", [])
+    out: List[str] = []
+    for x in kws:
+        if isinstance(x, str):
+            out.append(normalize_term(x))
+        elif isinstance(x, dict) and "keyword" in x:
+            out.append(normalize_term(str(x["keyword"])))
+    return out
+
+
+def _score_candidate(term_norm: str, cand: Dict[str, Any]) -> float:
+    score = 0.0
+    kws = _extract_keywords(cand)
+
+    # Exact keyword match
+    if term_norm in kws:
+        score += 10.0
+
+    # Substring match in any keyword
+    if any(term_norm in kw for kw in kws):
+        score += 3.0
+
+    # Fallback: tiny score if has any keywords
+    if kws:
+        score += 0.5
+
+    return score
+
+
+def _cache_path(lang: str) -> str:
+    os.makedirs("data", exist_ok=True)
+    return os.path.join("data", f"arasaac_cache_{lang}.json")
+
+
+def _load_cache(lang: str) -> Dict[str, Any]:
+    path = _cache_path(lang)
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _save_cache(lang: str, cache: Dict[str, Any]) -> None:
+    path = _cache_path(lang)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=2)
+
+
+def resolve_term_to_picto(term: str, lang: str = "fr", limit: int = 12) -> Optional[ResolvedPicto]:
+    """
+    Resolve a term to the best ARASAAC pictogram candidate.
+    Uses disk cache: data/arasaac_cache_{lang}.json
+    """
+    term_norm = normalize_term(term)
+    if not term_norm:
+        return None
+
+    cache = _load_cache(lang)
+    if term_norm in cache:
+        hit = cache[term_norm]
+        return ResolvedPicto(
+            term=term,
+            picto_id=int(hit["picto_id"]),
+            url=str(hit["url"]),
+            score=float(hit.get("score", 0.0)),
+            tags=hit.get("tags", []) or [],
+            categories=hit.get("categories", []) or [],
+            keyword=hit.get("keyword"),
+            plural=hit.get("plural"),
+        )
+
+
+    client = ArasaacClient(lang=lang)
+    queries = [term_norm]
+    sing = _naive_singularize_fr(term_norm)
+    if sing != term_norm:
+        queries.append(sing)
+
+    best: Optional[Tuple[float, Dict[str, Any]]] = None
+
+    for q in queries:
+        results = client.search(q, limit=limit)
+        for cand in results:
+            s = _score_candidate(q, cand)
+            if best is None or s > best[0]:
+                best = (s, cand)
+
+    if best is None:
+        return None
+
+    score, cand = best
+    picto_id = int(cand.get("_id")) if cand.get("_id") is not None else None
+    if picto_id is None:
+        return None
+    
+    tags, categories = _extract_tags_categories(cand)
+    kw, pl = _extract_keyword_info(cand)
+
+
+    url = client.pictogram_url(picto_id)
+    resolved = ResolvedPicto(
+    term=term,
+    picto_id=picto_id,
+    url=url,
+    score=score,
+    tags=tags,
+    categories=categories,
+    keyword=kw,
+    plural=pl,
+)
+
+    cache[term_norm] = {
+        "picto_id": picto_id,
+        "url": url,
+        "score": score,
+        "tags": tags,
+        "categories": categories,
+        "keyword": kw,
+        "plural": pl,
+    }
+    _save_cache(lang, cache)
+
+    return resolved
+
+def _extract_keyword_info(cand: Dict[str, Any]) -> Tuple[Optional[str], Optional[str]]:
+    kws = cand.get("keywords", []) or []
+    for x in kws:
+        if isinstance(x, dict) and "keyword" in x:
+            kw = x.get("keyword")
+            pl = x.get("plural")
+            return (str(kw) if kw else None, str(pl) if pl else None)
+    return (None, None)
+
+
+def _extract_tags_categories(cand: Dict[str, Any]) -> Tuple[List[str], List[str]]:
+    tags = cand.get("tags", []) or []
+    categories = cand.get("categories", []) or []
+    tags_out = [str(t).strip().lower() for t in tags if str(t).strip()]
+    cat_out = [str(c).strip().lower() for c in categories if str(c).strip()]
+    return tags_out, cat_out
+
