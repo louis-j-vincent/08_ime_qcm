@@ -4,6 +4,8 @@ from enum import Enum
 import random
 from typing import Callable, Dict
 from qcmgen.nlp import Fact
+from qcmgen.pictos.resolve import resolve_term_to_picto, sample_cached_by_tag
+
 
 
 class QuestionType(str, Enum):
@@ -113,6 +115,41 @@ def build_choices(correct: str, pool_name: str, k: int = 3):
     answer_index = choices.index(correct)
     return choices, answer_index
 
+def build_choices_with_arasaac(correct: str, category : str = "animals", k: int = 3) -> tuple[list[str], int]:
+    """
+    Build choices for a correct answer using ARASAAC metadata when possible.
+    If correct maps to an 'animal' picto, sample animal distractors from the cache.
+    Fallback to existing pools otherwise.
+    """
+    correct_norm = correct.strip().lower()
+    if not correct_norm:
+        return build_choices(correct, category, k)
+
+    r = resolve_term_to_picto(correct_norm, lang="fr")
+
+    # If we can detect it's an animal, sample other animals from cache
+    if r is not None and ("animal" in (r.tags or [])):
+        distract_pictos = sample_cached_by_tag("animal", k=k, exclude_ids={r.picto_id}, lang="fr")
+        distract_terms = []
+        for p in distract_pictos:
+            # Prefer the ARASAAC keyword (cleaner) if present
+            if p.keyword:
+                distract_terms.append(p.keyword)
+            else:
+                distract_terms.append(p.term)
+
+        # Ensure we have enough and not duplicating correct
+        distract_terms = [d for d in distract_terms if d.lower() != correct_norm]
+        if len(distract_terms) >= k:
+            choices = distract_terms[:k] + [correct]
+            import random
+            random.shuffle(choices)
+            return choices, choices.index(correct)
+
+    # Fallback: use your existing animal pool
+    return build_choices(correct, category, k)
+
+
 def _normalize_answer(s: str) -> str:
     return " ".join(s.strip().split())
 
@@ -120,7 +157,7 @@ def payload_to_qcm(payload: QcmPayload) -> QCM:
     question = payload.template.format(**payload.template_vars) #remplir les variables du template (ex : "Que {verb} {subj} ?".format(verb="voir", subj="Martin") => "Que voir Martin ?") 
 
     correct = _normalize_answer(payload.correct)
-    choices, answer_index = build_choices(correct, pool_name=payload.pool_name, k=3)
+    choices, answer_index = build_choices_with_arasaac(correct, k=3)
 
     return QCM(
         question=question,
