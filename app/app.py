@@ -2,15 +2,58 @@ import streamlit as st
 
 from qcmgen.nlp import extract_facts
 from qcmgen.qcm import generate_qcms
+from qcmgen.pictos.resolve import resolve_term_to_picto
+
 
 st.set_page_config(page_title="IME QCM Generator", layout="centered")
 st.title("IME QCM Generator (v0)")
+
+# padding pour les choix
+st.markdown(
+    """
+<style>
+.choice-card {
+  padding: 10px;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  text-align: center;
+}
+.choice-card.selected {
+  border-color: #22c55e; /* vert */
+  background: rgba(34, 197, 94, 0.10);
+}
+.choice-label {
+  margin-top: 6px;
+  font-size: 14px;
+}
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
 
 if "qcms" not in st.session_state:
     st.session_state.qcms = []
 
 if "submitted" not in st.session_state:
     st.session_state.submitted = False
+
+if "picto_cache" not in st.session_state:
+    st.session_state.picto_cache = {}
+
+def _picto_url_for(term: str) -> str | None:
+    term_norm = term.strip().lower()
+    if not term_norm:
+        return None
+
+    cache = st.session_state.picto_cache
+    if term_norm in cache:
+        return cache[term_norm]
+
+    r = resolve_term_to_picto(term_norm, lang="fr")
+    url = r.url if r else None
+    cache[term_norm] = url
+    return url
 
 
 text = st.text_area('Texte (FR, court)', height = 150, placeholder = "Entrez un texte en français ici...")
@@ -49,16 +92,38 @@ else:
     st.subheader("QCM générés")
     for i, qcm in enumerate(qcms, start=1):
         st.markdown(f"**QCM {i}:** {qcm.question}")
-        st.radio(
-            label = "Choisis une réponse",
-            options = list(range(len(qcm.choices))),
-            format_func=lambda idx, choices=qcm.choices: choices[idx],
-            key=f"qcm_{i}",
-            horizontal=True
-        )
 
-        if show_debug:
-            st.caption(f"type={qcm.qtype} | answer={qcm.choices[qcm.answer_index]} | rationale={qcm.rationale}")
+        key = f"qcm_{i}"
+        if key not in st.session_state:
+            st.session_state[key] = None
+
+        cols = st.columns(len(qcm.choices))
+
+        for j, (col, choice_text) in enumerate(zip(cols, qcm.choices)):
+            with col:
+                is_selected = (st.session_state[key] == j)
+                card_class = "choice-card selected" if is_selected else "choice-card"
+
+                st.markdown(f"<div class='{card_class}'>", unsafe_allow_html=True)
+
+                url = _picto_url_for(choice_text)
+                if url:
+                    st.image(url, use_container_width=True)
+                else:
+                    st.write("❓")
+
+                if show_debug:
+                    st.markdown(f"<div class='choice-label'>{choice_text}</div>", unsafe_allow_html=True)
+
+                # Le bouton est la vraie interaction
+                if st.button("Sélectionner" if not is_selected else "Sélectionné ✅", key=f"{key}_btn_{j}"):
+                    st.session_state[key] = j
+
+                st.markdown("</div>", unsafe_allow_html=True)
+
+
+                if show_debug:
+                    st.caption(choice_text)
 
         st.divider()  
 
