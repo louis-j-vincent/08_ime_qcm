@@ -47,7 +47,19 @@ class QCM:
     qtype: QuestionType
     rationale: Optional[str] = None
 
-# Predefined pools of words for generating distractors
+from typing import Dict
+
+# Payload qui gère les infos nécessaires à la génération d'un QCM
+@dataclass(frozen=True)
+class QcmPayload:
+    qtype: QuestionType
+    template: str
+    template_vars: Dict[str, str]
+    correct: str
+    pool_name: str
+    rationale: str = ""
+
+# Pools de distracteurs pour 3 différentes catégories (v0)
 
 ANIMALS = [
     "chat", "chien", "souris", "lapin", "cheval", "lion", "poisson",
@@ -83,3 +95,7 @@ def build_choices(correct: str, pool_name: str, k: int = 3):
     random.shuffle(choices)
     answer_index = choices.index(correct)
     return choices, answer_index
+
+def _normalize_answer(s: str) -> str:
+    return " ".join(s.strip().split())
+
