@@ -132,11 +132,10 @@ def build_choices_with_arasaac(correct: str, category : str = "animals", k: int 
         distract_pictos = sample_cached_by_tag("animal", k=k, exclude_ids={r.picto_id}, lang="fr")
         distract_terms = []
         for p in distract_pictos:
-            # Prefer the ARASAAC keyword (cleaner) if present
-            if p.keyword:
-                distract_terms.append(p.keyword)
-            else:
-                distract_terms.append(p.term)
+            if "verb" in (p.tags or []) or "verb" in (p.categories or []):
+                continue
+            distract_terms.append(p.keyword if p.keyword else p.term)
+
 
         # Ensure we have enough and not duplicating correct
         distract_terms = [d for d in distract_terms if d.lower() != correct_norm]
@@ -157,7 +156,13 @@ def payload_to_qcm(payload: QcmPayload) -> QCM:
     question = payload.template.format(**payload.template_vars) #remplir les variables du template (ex : "Que {verb} {subj} ?".format(verb="voir", subj="Martin") => "Que voir Martin ?") 
 
     correct = _normalize_answer(payload.correct)
-    choices, answer_index = build_choices_with_arasaac(correct, k=3)
+    if payload.qtype == QuestionType.SUBJECT:
+        choices, answer_index = build_choices(correct, "people", k=3)
+    elif payload.qtype in (QuestionType.OBJECT, QuestionType.ADJ_NOUN):
+        choices, answer_index = build_choices_with_arasaac(correct, k=3)
+    else:
+        choices, answer_index = build_choices(correct, payload.pool_name, k=3)
+
 
     return QCM(
         question=question,
