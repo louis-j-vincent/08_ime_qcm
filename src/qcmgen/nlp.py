@@ -19,8 +19,10 @@ def get_nlp():
 class Fact:
     sent_text: str #texte brut de la phrase
     subj: Optional[str] #sujet de la phrase
-    verb: Optional[str] #verbe de la phrase
-    obj: Optional[str] #objet de la phrase
+    verb_lemma: Optional[str] #verbe de la phrase ex: "manger"
+    verb_text: Optional[str] #forme conjuguée du verbe dans la phrase ex: "a mangé"
+    obj_phrase: Optional[str] #groupe nominal objet complet de la phrase ex: "le ballon rouge"
+    obj_head: Optional[str] #nom principal de l'objet ex: "ballon"
     adj_pairs: List[Tuple[str, str]] #liste de paires (nom, adjectif) associées dans la phrase
 
 def extract_facts(text: str) -> List[Fact]:
@@ -31,22 +33,35 @@ def extract_facts(text: str) -> List[Fact]:
     facts: List[Fact] = []
     for sent in doc.sents:
         subj = None
-        verb = None
-        obj = None
+        verb_lemma = None
+        verb_text = None
+        obj_phrase = None
+        obj_head = None
         adj_pairs: List[Tuple[str, str]] = []
 
         # 1) verbe principal = ROOT
         root = robust_root_extraction(sent)
 
         if root is not None:
-            verb = root.lemma_ #forme canonique du verbe, + stable
+            verb_lemma = root.lemma_ #forme canonique du verbe, + stable
+
+            # vers_text: root + auxiliaires (passé composé, etc)
+            parts = [root]
+            for child in root.children:
+                if child.dep_ in ("aux", "aux:pass", "aux:tense"):
+                    parts.insert(0, child)
+
+            # garder l'ordre des tokens dans la phrase
+            parts = sorted(parts, key=lambda t: t.i)
+            verb_text = " ".join(t.text for t in parts)
 
             # 2) sujet (robuste) + objet parmi les enfants du ROOT
             subj = robust_subj_extraction(sent)
 
             for child in root.children:
-                if child.dep_ in ("obj", "iobj") and obj is None:
-                    obj = " ".join(t.text for t in child.subtree) #gérer les objets composés (ex: "le ballon rouge" plutot que "ballon")
+                if child.dep_ in ("obj", "iobj") and obj_phrase is None:
+                    obj_phrase = " ".join(t.text for t in child.subtree) #gérer les objets composés (ex: "le ballon rouge" plutot que "ballon")
+                    obj_head = child.text
 
             # 3) adjectifs liés à des noms dans la phrase
             for token in sent:
@@ -56,8 +71,10 @@ def extract_facts(text: str) -> List[Fact]:
             facts.append(Fact(
                 sent_text=sent.text.strip(),
                 subj=subj,
-                verb=verb,
-                obj=obj,
+                verb_lemma=verb_lemma,
+                verb_text=verb_text,
+                obj_phrase=obj_phrase,
+                obj_head=obj_head,
                 adj_pairs=adj_pairs
             ))
 
