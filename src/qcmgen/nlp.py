@@ -37,7 +37,7 @@ def extract_facts(text: str) -> List[Fact]:
         verb_text = None
         obj_phrase = None
         obj_head = None
-        adj_pairs: List[Tuple[str, str]] = []
+        adj_pairs: List[Tuple[str, str, str]] = []  # (noun_text, adj_text, number="Sing"/"Plur"/"")
 
         # 1) verbe principal = ROOT
         root = robust_root_extraction(sent)
@@ -66,7 +66,10 @@ def extract_facts(text: str) -> List[Fact]:
             # 3) adjectifs liés à des noms dans la phrase
             for token in sent:
                 if token.dep_ == "amod" and token.head.pos_ in ("NOUN", "PROPN"):
-                    adj_pairs.append((token.head.text, token.text))
+                    head = token.head
+                    nums = head.morph.get("Number")
+                    number = nums[0] if nums else ""
+                    adj_pairs.append((head.text, token.text, number))
 
             facts.append(Fact(
                 sent_text=sent.text.strip(),
