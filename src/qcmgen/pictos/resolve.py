@@ -112,16 +112,20 @@ def resolve_term_to_picto(term: str, lang: str = "fr", limit: int = 12) -> Optio
     cache = _load_cache(lang)
     if term_norm in cache:
         hit = cache[term_norm]
-        return ResolvedPicto(
-            term=term,
-            picto_id=int(hit["picto_id"]),
-            url=str(hit["url"]),
-            score=float(hit.get("score", 0.0)),
-            tags=hit.get("tags", []) or [],
-            categories=hit.get("categories", []) or [],
-            keyword=hit.get("keyword"),
-            plural=hit.get("plural"),
-        )
+
+        # Si ancienne entrée (pas de tags), on refetch pour enrichir
+        if hit.get("tags") and hit.get("categories"):
+            return ResolvedPicto(
+                term=term,
+                picto_id=int(hit["picto_id"]),
+                url=str(hit["url"]),
+                score=float(hit.get("score", 0.0)),
+                tags=hit.get("tags", []) or [],
+                categories=hit.get("categories", []) or [],
+                keyword=hit.get("keyword"),
+                plural=hit.get("plural"),
+            )
+
 
 
     client = ArasaacClient(lang=lang)
@@ -193,3 +197,42 @@ def _extract_tags_categories(cand: Dict[str, Any]) -> Tuple[List[str], List[str]
     cat_out = [str(c).strip().lower() for c in categories if str(c).strip()]
     return tags_out, cat_out
 
+import random
+from typing import Set
+
+
+def sample_cached_by_tag(tag: str, k: int = 3, exclude_ids: Optional[Set[int]] = None, lang: str = "fr") -> List[ResolvedPicto]:
+    tag = tag.strip().lower()
+    exclude_ids = exclude_ids or set()
+
+    cache = _load_cache(lang)
+    candidates: List[ResolvedPicto] = []
+
+    for term_norm, hit in cache.items():
+        picto_id = int(hit.get("picto_id", -1))
+        if picto_id in exclude_ids:
+            continue
+
+        tags = hit.get("tags", []) or []
+        tags = [str(t).strip().lower() for t in tags]
+
+        if tag not in tags:
+            continue
+
+        candidates.append(
+            ResolvedPicto(
+                term=term_norm,
+                picto_id=picto_id,
+                url=str(hit.get("url")),
+                score=float(hit.get("score", 0.0)),
+                tags=hit.get("tags", []) or [],
+                categories=hit.get("categories", []) or [],
+                keyword=hit.get("keyword"),
+                plural=hit.get("plural"),
+            )
+        )
+
+    if len(candidates) <= k:
+        return candidates
+
+    return random.sample(candidates, k)

@@ -1,0 +1,68 @@
+{
+  "chat": {
+    "picto_id": 7114,
+    "url": "https://static.arasaac.org/pictograms/7114/7114_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "carnivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "pet",
+      "domestic",
+      "core vocabulary"
+    ],
+    "categories": [
+      "carnivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "pet",
+      "domestic animal",
+      "core vocabulary-living being"
+    ],
+    "keyword": "chat",
+    "plural": "chats"
+  },
+  "chats": {
+    "picto_id": 7114,
+    "url": "https://static.arasaac.org/pictograms/7114/7114_500.png",
+    "score": 13.5
+  },
+  "chien": {
+    "picto_id": 7202,
+    "url": "https://static.arasaac.org/pictograms/7202/7202_500.png",
+    "score": 13.5
+  },
+  "cheval": {
+    "picto_id": 2294,
+    "url": "https://static.arasaac.org/pictograms/2294/2294_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "herbivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "domestic",
+      "core vocabulary",
+      "leisure",
+      "sport"
+    ],
+    "categories": [
+      "herbivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "domestic animal",
+      "core vocabulary-living being",
+      "animal",
+      "sport"
+    ],
+    "keyword": "cheval",
+    "plural": "chevaux"
+  }
+}
