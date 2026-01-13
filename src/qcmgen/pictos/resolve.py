@@ -236,3 +236,47 @@ def sample_cached_by_tag(tag: str, k: int = 3, exclude_ids: Optional[Set[int]] =
         return candidates
 
     return random.sample(candidates, k)
+
+def resolve_term_to_picto_strict(term: str, lang: str = "fr", limit: int = 12) -> Optional[ResolvedPicto]:
+    """
+    Strict resolver: only accept if term matches a keyword exactly (case/accents normalized).
+    This avoids weird matches (e.g., proper names).
+    """
+    term_norm = normalize_term(term)
+    if not term_norm:
+        return None
+
+    client = ArasaacClient(lang=lang)
+    results = client.search(term_norm, limit=limit)
+
+    best: Optional[Tuple[float, Dict[str, Any]]] = None
+    for cand in results:
+        kws = _extract_keywords(cand)
+        if term_norm not in kws:
+            continue  # strict: must be exact keyword
+        s = _score_candidate(term_norm, cand)
+        if best is None or s > best[0]:
+            best = (s, cand)
+
+    if best is None:
+        return None
+
+    score, cand = best
+    picto_id = int(cand.get("_id")) if cand.get("_id") is not None else None
+    if picto_id is None:
+        return None
+
+    url = client.pictogram_url(picto_id)
+    tags, categories = _extract_tags_categories(cand)
+    kw, pl = _extract_keyword_info(cand)
+
+    return ResolvedPicto(
+        term=term,
+        picto_id=picto_id,
+        url=url,
+        score=score,
+        tags=tags,
+        categories=categories,
+        keyword=kw,
+        plural=pl,
+    )
