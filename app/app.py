@@ -1,8 +1,15 @@
 import streamlit as st
 
+from pathlib import Path
+import sys
+
+project_root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(project_root / "src"))
+
+
 from qcmgen.nlp import extract_facts
 from qcmgen.qcm import generate_qcms
-from qcmgen.pictos.resolve import resolve_term_to_picto
+from qcmgen.pictos.resolve import resolve_term_to_picto_strict
 
 
 st.set_page_config(page_title="IME QCM Generator", layout="centered")
@@ -50,13 +57,15 @@ def _picto_url_for(term: str) -> str | None:
     if term_norm in cache:
         return cache[term_norm]
 
-    r = resolve_term_to_picto(term_norm, lang="fr")
+    r = resolve_term_to_picto_strict(term_norm, lang="fr")
     url = r.url if r else None
     cache[term_norm] = url
     return url
 
 
 text = st.text_area('Texte (FR, court)', height = 150, placeholder = "Entrez un texte en français ici...")
+
+use_llm = st.toggle("Utiliser LLM", value=False)
 
 col1, col2 = st.columns([1,1])
 with col1:
@@ -70,13 +79,33 @@ if generate:
     if not text.strip():
         st.warning("Veuillez entrer un texte avant de générer des QCM.")
     else:
-        facts = extract_facts(text)
 
-        all_qcms = []
-        for fact in facts:
-            all_qcms.extend(generate_qcms(fact))
+        if use_llm:
+
+            from qcmgen.llm import generate_qcms_from_text_llm
+
+            all_qcms = generate_qcms_from_text_llm(text)
+
+            st.session_state.qcms = all_qcms
+
+        else:
+            facts = extract_facts(text)
+
+            all_qcms = []
+            for fact in facts:
+                all_qcms.extend(generate_qcms(fact))
 
         st.session_state.qcms = all_qcms
+
+        # Filtrer les QCM sans pictos valides
+        filtered = []
+        for q in st.session_state.qcms:
+            urls = [ _picto_url_for(c) for c in q.choices ]
+            if all(u is not None for u in urls):
+                filtered.append(q)
+
+        st.session_state.qcms = filtered
+
 
         # Nettoyer les anciennes réponses
         for k in list(st.session_state.keys()):
