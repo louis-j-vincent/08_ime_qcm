@@ -87,11 +87,6 @@ def _score_candidate(term_norm: str, cand: Dict[str, Any]) -> float:
 
     return score
 
-
-def _cache_path(lang: str) -> str:
-    os.makedirs("data", exist_ok=True)
-    return os.path.join("data", f"arasaac_cache_{lang}.json")
-
 def _cache_path(lang: str) -> str:
     project_root = Path(__file__).resolve().parents[3]
     data_dir = project_root / "data"
