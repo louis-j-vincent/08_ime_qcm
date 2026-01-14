@@ -8,6 +8,15 @@ from typing import Optional, Dict, Any, List, Tuple
 
 from qcmgen.pictos.arasaac_client import ArasaacClient
 
+EXPECTED_TAGS = {
+    "color": {"color", "colour"},
+    "weather": {"weather", "meteorology", "rain", "sun", "cloud", "wind", "snow", "storm"},
+    "drink": {"drink", "beverage"},
+    "food": {"food", "feeding", "fruit", "vegetable", "dessert", "bread"},
+    "place": {"place", "building", "house", "home", "school", "transport", "city"},
+    # "object" : pas de contrainte forte (sinon tu vas jeter trop de choses)
+}
+
 
 @dataclass(frozen=True)
 class ResolvedPicto:
@@ -100,7 +109,7 @@ def _save_cache(lang: str, cache: Dict[str, Any]) -> None:
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
 
-def resolve_term_to_picto(term: str, lang: str = "fr", limit: int = 12) -> Optional[ResolvedPicto]:
+def resolve_term_to_picto(term: str, lang: str = "fr", limit: int = 12, expected_type: str | None = None) -> Optional[ResolvedPicto]:
     """
     Resolve a term to the best ARASAAC pictogram candidate.
     Uses disk cache: data/arasaac_cache_{lang}.json
@@ -237,7 +246,7 @@ def sample_cached_by_tag(tag: str, k: int = 3, exclude_ids: Optional[Set[int]] =
 
     return random.sample(candidates, k)
 
-def resolve_term_to_picto_strict(term: str, lang: str = "fr", limit: int = 12) -> Optional[ResolvedPicto]:
+def resolve_term_to_picto_strict(term: str, lang: str = "fr", limit: int = 12, expected_type: str | None = None) -> Optional[ResolvedPicto]:
     """
     Strict resolver: only accept if term matches a keyword exactly (case/accents normalized).
     This avoids weird matches (e.g., proper names).
@@ -251,6 +260,9 @@ def resolve_term_to_picto_strict(term: str, lang: str = "fr", limit: int = 12) -
 
     best: Optional[Tuple[float, Dict[str, Any]]] = None
     for cand in results:
+        tags, categories = _extract_tags_categories(cand)
+        if not _matches_expected_type(expected_type, tags, categories):
+            continue
         kws = _extract_keywords(cand)
         if term_norm not in kws:
             continue  # strict: must be exact keyword
@@ -280,3 +292,26 @@ def resolve_term_to_picto_strict(term: str, lang: str = "fr", limit: int = 12) -
         keyword=kw,
         plural=pl,
     )
+
+def _matches_expected_type(expected_type: str | None, tags: list[str], categories: list[str]) -> bool:
+    if not expected_type:
+        return True
+
+    exp = expected_type.lower().strip()
+    if exp not in EXPECTED_TAGS:
+        return True  # type inconnu => pas de filtre
+
+    s = set((t or "").lower() for t in (tags or [])) | set((c or "").lower() for c in (categories or []))
+    required = EXPECTED_TAGS[exp]
+    return bool(s & required)
+
+
+def resolve_many_terms_to_picto(terms: List[str], lang: str = "fr", limit: int = 12) -> Dict[str, Optional[ResolvedPicto]]:
+    """
+    Resolve multiple terms to pictograms.
+    Returns a dictionary mapping each term to its resolved pictogram (or None if not found).
+    """
+    result: Dict[str, Optional[ResolvedPicto]] = {}
+    for term in terms:
+        result[term] = resolve_term_to_picto(term, lang=lang, limit=limit)
+    return result
