@@ -3,6 +3,7 @@
 import json
 import os
 import unicodedata
+from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, Dict, Any, List, Tuple
 
@@ -90,6 +91,13 @@ def _score_candidate(term_norm: str, cand: Dict[str, Any]) -> float:
 def _cache_path(lang: str) -> str:
     os.makedirs("data", exist_ok=True)
     return os.path.join("data", f"arasaac_cache_{lang}.json")
+
+def _cache_path(lang: str) -> str:
+    project_root = Path(__file__).resolve().parents[3]
+    data_dir = project_root / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    return str(data_dir / f"arasaac_cache_{lang}.json")
+
 
 
 def _load_cache(lang: str) -> Dict[str, Any]:
@@ -185,6 +193,7 @@ def resolve_term_to_picto(term: str, lang: str = "fr", limit: int = 12, expected
         "keyword": kw,
         "plural": pl,
     }
+    print(f"Caching pictogram for term '{term_norm}' (picto_id={picto_id})")
     _save_cache(lang, cache)
 
     return resolved
@@ -246,7 +255,7 @@ def sample_cached_by_tag(tag: str, k: int = 3, exclude_ids: Optional[Set[int]] =
 
     return random.sample(candidates, k)
 
-def resolve_term_to_picto_strict(term: str, lang: str = "fr", limit: int = 12, expected_type: str | None = None) -> Optional[ResolvedPicto]:
+def resolve_term_to_picto_strict(term: str, lang: str = "fr", limit: int = 12, expected_type: str | None = None, add_to_cache: bool = True) -> Optional[ResolvedPicto]:
     """
     Strict resolver: only accept if term matches a keyword exactly (case/accents normalized).
     This avoids weird matches (e.g., proper names).
@@ -281,6 +290,22 @@ def resolve_term_to_picto_strict(term: str, lang: str = "fr", limit: int = 12, e
     url = client.pictogram_url(picto_id)
     tags, categories = _extract_tags_categories(cand)
     kw, pl = _extract_keyword_info(cand)
+
+    if add_to_cache:
+
+        cache = _load_cache(lang)
+
+        cache[term_norm] = {
+            "picto_id": picto_id,
+            "url": url,
+            "score": score,
+            "tags": tags,
+            "categories": categories,
+            "keyword": kw,
+            "plural": pl,
+        }
+
+        _save_cache(lang, cache)
 
     return ResolvedPicto(
         term=term,
