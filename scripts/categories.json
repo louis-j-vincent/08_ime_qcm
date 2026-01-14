@@ -1,0 +1,53 @@
+{
+  "animal": [
+    "chat", "chien", "cheval", "vache", "mouton", "cochon",
+    "lapin", "souris", "oiseau", "poisson", "lion", "éléphant"
+  ],
+  "food": [
+    "pomme", "banane", "poire", "pain", "fromage", "gâteau",
+    "riz", "pâtes", "soupe", "chocolat", "yaourt"
+  ],
+  "drink": [
+    "eau", "lait", "jus", "café", "thé", "chocolat chaud"
+  ],
+  "furniture": [
+    "table", "chaise", "lit", "canapé", "armoire", "bureau", "étagère"
+  ],
+  "clothing": [
+    "pantalon", "tee-shirt", "robe", "pull", "manteau",
+    "chaussures", "chaussettes", "chapeau"
+  ],
+  "profession": [
+    "médecin", "infirmier", "enseignant", "policier",
+    "pompier", "boulanger", "cuisinier", "chauffeur"
+  ],
+  "sport": [
+    "football", "basket", "tennis", "natation",
+    "vélo", "course", "judo", "gymnastique"
+  ],
+  "musical_instrument": [
+    "piano", "guitare", "violon", "tambour", "trompette", "flûte"
+  ],
+  "color": [
+    "rouge", "bleu", "vert", "jaune", "rose",
+    "noir", "blanc", "gris", "orange"
+  ],
+  "shape": [
+    "rond", "carré", "triangle", "rectangle", "étoile", "cœur"
+  ],
+  "weather": [
+    "soleil", "pluie", "neige", "vent", "nuage", "orage"
+  ],
+  "emotion": [
+    "content", "triste", "en colère", "peur", "surpris", "fatigué"
+  ],
+  "body_part": [
+    "tête", "main", "pied", "bras", "jambe", "œil", "bouche", "nez"
+  ],
+  "vehicle": [
+    "voiture", "vélo", "bus", "camion", "train", "moto", "avion"
+  ],
+  "place": [
+    "maison", "école", "parc", "hôpital", "magasin", "piscine", "rue"
+  ]
+}

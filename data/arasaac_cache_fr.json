@@ -29,7 +29,29 @@
   "chats": {
     "picto_id": 7114,
     "url": "https://static.arasaac.org/pictograms/7114/7114_500.png",
-    "score": 13.5
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "carnivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "pet",
+      "domestic",
+      "core vocabulary"
+    ],
+    "categories": [
+      "carnivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "pet",
+      "domestic animal",
+      "core vocabulary-living being"
+    ],
+    "keyword": "chat",
+    "plural": "chats"
   },
   "chien": {
     "picto_id": 7202,
@@ -728,5 +750,2040 @@
     ],
     "keyword": "gris",
     "plural": null
+  },
+  "manuel": {
+    "picto_id": 30018,
+    "url": "https://static.arasaac.org/pictograms/30018/30018_500.png",
+    "score": 13.5,
+    "tags": [
+      "document",
+      "information document",
+      "place",
+      "building",
+      "culture"
+    ],
+    "categories": [
+      "information document",
+      "cultural building"
+    ],
+    "keyword": "guide",
+    "plural": "guides"
+  },
+  "emma": {
+    "picto_id": 37830,
+    "url": "https://static.arasaac.org/pictograms/37830/37830_500.png",
+    "score": 3.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "adjective",
+      "qualifying adjective",
+      "psychology",
+      "disruptive behavior"
+    ],
+    "categories": [
+      "verb",
+      "qualifying adjective",
+      "disruptive behavior"
+    ],
+    "keyword": "trainer",
+    "plural": null
+  },
+  "paul": {
+    "picto_id": 2977,
+    "url": "https://static.arasaac.org/pictograms/2977/2977_500.png",
+    "score": 3.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "physiology",
+      "human physiology",
+      "joint system"
+    ],
+    "categories": [
+      "human anatomy",
+      "joint system"
+    ],
+    "keyword": "épaule",
+    "plural": "épaules"
+  },
+  "sami": {
+    "picto_id": 38539,
+    "url": "https://static.arasaac.org/pictograms/38539/38539_500.png",
+    "score": 3.5,
+    "tags": [
+      "feeding",
+      "food",
+      "ultra-processed food",
+      "condiment"
+    ],
+    "categories": [
+      "condiment"
+    ],
+    "keyword": "vinaigre balsamique",
+    "plural": "vinaigres balsamiques"
+  },
+  "elephants": {
+    "picto_id": 2372,
+    "url": "https://static.arasaac.org/pictograms/2372/2372_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "herbivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "wild",
+      "domestic",
+      "core vocabulary"
+    ],
+    "categories": [
+      "herbivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "wild animal",
+      "domestic animal",
+      "core vocabulary-living being"
+    ],
+    "keyword": "éléphant",
+    "plural": "éléphants"
+  },
+  "marie": {
+    "picto_id": 7301,
+    "url": "https://static.arasaac.org/pictograms/7301/7301_500.png",
+    "score": 13.5,
+    "tags": [
+      "religion",
+      "character",
+      "christianity",
+      "event",
+      "popular event",
+      "christmas"
+    ],
+    "categories": [
+      "religious character",
+      "christianity",
+      "christmas"
+    ],
+    "keyword": "Vierge Marie",
+    "plural": null
+  },
+  "lama": {
+    "picto_id": 9067,
+    "url": "https://static.arasaac.org/pictograms/9067/9067_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "herbivorous",
+      "vertebrate",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "work",
+      "primary sector",
+      "cattle farming",
+      "domestic"
+    ],
+    "categories": [
+      "herbivorous",
+      "mammal",
+      "viviparous",
+      "terrestrial animal",
+      "cattle farming",
+      "domestic animal"
+    ],
+    "keyword": "lama",
+    "plural": "lamas"
+  },
+  "pingouin": {
+    "picto_id": 3243,
+    "url": "https://static.arasaac.org/pictograms/3243/3243_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "carnivorous",
+      "vertebrate",
+      "bird",
+      "oviparous",
+      "aquatic animal",
+      "marine animal",
+      "sea",
+      "terrestrial animal",
+      "wild"
+    ],
+    "categories": [
+      "carnivorous",
+      "bird",
+      "oviparous",
+      "marine animal",
+      "terrestrial animal",
+      "wild animal"
+    ],
+    "keyword": "pingouin",
+    "plural": "pingouins"
+  },
+  "l'": {
+    "picto_id": 37974,
+    "url": "https://static.arasaac.org/pictograms/37974/37974_500.png",
+    "score": 3.5,
+    "tags": [
+      "communication",
+      "language",
+      "verb",
+      "leisure",
+      "sport",
+      "physical exercise"
+    ],
+    "categories": [
+      "verb",
+      "physical exercise"
+    ],
+    "keyword": "sauter à cloche-pied à l'intérieur des cerceaux",
+    "plural": null
+  },
+  "cafe": {
+    "picto_id": 24479,
+    "url": "https://static.arasaac.org/pictograms/24479/24479_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "beverage",
+      "core vocabulary"
+    ],
+    "categories": [
+      "beverage",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "café",
+    "plural": "cafés"
+  },
+  "m’": {
+    "picto_id": 32753,
+    "url": "https://static.arasaac.org/pictograms/32753/32753_500.png",
+    "score": 0.5,
+    "tags": [
+      "communication",
+      "language",
+      "expression",
+      "core vocabulary"
+    ],
+    "categories": [
+      "expression",
+      "core vocabulary-communication"
+    ],
+    "keyword": "j'en veux plus",
+    "plural": null
+  },
+  "casque": {
+    "picto_id": 2691,
+    "url": "https://static.arasaac.org/pictograms/2691/2691_500.png",
+    "score": 13.5,
+    "tags": [
+      "work",
+      "clothes",
+      "workwear",
+      "secondary sector",
+      "construction"
+    ],
+    "categories": [
+      "workwear",
+      "construction"
+    ],
+    "keyword": "casque",
+    "plural": "casques"
+  },
+  "mur": {
+    "picto_id": 2860,
+    "url": "https://static.arasaac.org/pictograms/2860/2860_500.png",
+    "score": 13.5,
+    "tags": [
+      "architecture",
+      "building",
+      "architectural element",
+      "work",
+      "secondary sector",
+      "construction"
+    ],
+    "categories": [
+      "architectural element",
+      "construction"
+    ],
+    "keyword": "mur",
+    "plural": "murs"
+  },
+  "maman": {
+    "picto_id": 2458,
+    "url": "https://static.arasaac.org/pictograms/2458/2458_500.png",
+    "score": 13.5,
+    "tags": [
+      "person",
+      "family",
+      "core vocabulary"
+    ],
+    "categories": [
+      "family",
+      "core vocabulary-living being"
+    ],
+    "keyword": "maman",
+    "plural": "mamans"
+  },
+  "bebe": {
+    "picto_id": 6060,
+    "url": "https://static.arasaac.org/pictograms/6060/6060_500.png",
+    "score": 13.5,
+    "tags": [
+      "person",
+      "baby",
+      "health",
+      "medicine",
+      "babycare",
+      "core vocabulary"
+    ],
+    "categories": [
+      "baby",
+      "childcare",
+      "core vocabulary-living being"
+    ],
+    "keyword": "bébé",
+    "plural": "bébés"
+  },
+  "dora": {
+    "picto_id": 2735,
+    "url": "https://static.arasaac.org/pictograms/2735/2735_500.png",
+    "score": 3.5,
+    "tags": [
+      "object",
+      "hygiene product",
+      "hygiene",
+      "corporal hygiene",
+      "core vocabulary"
+    ],
+    "categories": [
+      "hygiene product",
+      "core vocabulary-object"
+    ],
+    "keyword": "déodorant",
+    "plural": "déodorants"
+  },
+  "canards": {
+    "picto_id": 28479,
+    "url": "https://static.arasaac.org/pictograms/28479/28479_500.png",
+    "score": 13.5,
+    "tags": [
+      "animal",
+      "omnivorous",
+      "vertebrate",
+      "bird",
+      "oviparous",
+      "aquatic animal",
+      "freshwater animal",
+      "river",
+      "flying animal",
+      "work",
+      "primary sector",
+      "hunting",
+      "core vocabulary"
+    ],
+    "categories": [
+      "omnivorous",
+      "bird",
+      "oviparous",
+      "river animal",
+      "flying animal",
+      "hunting",
+      "core vocabulary-living being",
+      "core vocabulary-work"
+    ],
+    "keyword": "canard",
+    "plural": "canards"
+  },
+  "frere": {
+    "picto_id": 2423,
+    "url": "https://static.arasaac.org/pictograms/2423/2423_500.png",
+    "score": 13.5,
+    "tags": [
+      "person",
+      "family"
+    ],
+    "categories": [
+      "family"
+    ],
+    "keyword": "frère",
+    "plural": "frères"
+  },
+  "pomme": {
+    "picto_id": 2462,
+    "url": "https://static.arasaac.org/pictograms/2462/2462_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "plant-based food",
+      "fruit",
+      "core vocabulary"
+    ],
+    "categories": [
+      "fruit",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "pomme",
+    "plural": "pommes"
+  },
+  "banane": {
+    "picto_id": 2530,
+    "url": "https://static.arasaac.org/pictograms/2530/2530_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "plant-based food",
+      "fruit",
+      "core vocabulary"
+    ],
+    "categories": [
+      "fruit",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "banane",
+    "plural": "bananes"
+  },
+  "poire": {
+    "picto_id": 2561,
+    "url": "https://static.arasaac.org/pictograms/2561/2561_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "plant-based food",
+      "fruit",
+      "core vocabulary"
+    ],
+    "categories": [
+      "fruit",
+      "core vocabulary-feeding",
+      "feeding"
+    ],
+    "keyword": "poire",
+    "plural": "poires"
+  },
+  "pain": {
+    "picto_id": 2494,
+    "url": "https://static.arasaac.org/pictograms/2494/2494_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "ultra-processed food",
+      "core vocabulary"
+    ],
+    "categories": [
+      "ultra-processed food",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "pain",
+    "plural": "pains"
+  },
+  "fromage": {
+    "picto_id": 2541,
+    "url": "https://static.arasaac.org/pictograms/2541/2541_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "animal-based food",
+      "dairy product",
+      "processed food",
+      "core vocabulary"
+    ],
+    "categories": [
+      "dairy product",
+      "processed food",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "fromage",
+    "plural": "fromages"
+  },
+  "gateau": {
+    "picto_id": 2502,
+    "url": "https://static.arasaac.org/pictograms/2502/2502_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "ultra-processed food",
+      "dessert",
+      "baking",
+      "core vocabulary"
+    ],
+    "categories": [
+      "baking",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "gâteau",
+    "plural": "gâteaux "
+  },
+  "riz": {
+    "picto_id": 6911,
+    "url": "https://static.arasaac.org/pictograms/6911/6911_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "plant-based food",
+      "cereal",
+      "plant",
+      "hervaceouos plant"
+    ],
+    "categories": [
+      "cereal",
+      "herbaceous plant"
+    ],
+    "keyword": "riz",
+    "plural": "riz"
+  },
+  "pates": {
+    "picto_id": 8652,
+    "url": "https://static.arasaac.org/pictograms/8652/8652_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "processed food"
+    ],
+    "categories": [
+      "processed food"
+    ],
+    "keyword": "pâtes",
+    "plural": "pâtes"
+  },
+  "soupe": {
+    "picto_id": 2573,
+    "url": "https://static.arasaac.org/pictograms/2573/2573_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "gastronomy",
+      "core vocabulary"
+    ],
+    "categories": [
+      "gastronomy",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "soupe",
+    "plural": "soupes"
+  },
+  "chocolat": {
+    "picto_id": 25940,
+    "url": "https://static.arasaac.org/pictograms/25940/25940_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "ultra-processed food",
+      "core vocabulary"
+    ],
+    "categories": [
+      "ultra-processed food",
+      "core vocabulary-feeding",
+      "food"
+    ],
+    "keyword": "chocolat",
+    "plural": null
+  },
+  "yaourt": {
+    "picto_id": 2618,
+    "url": "https://static.arasaac.org/pictograms/2618/2618_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "animal-based food",
+      "dairy product",
+      "ultra-processed food",
+      "core vocabulary"
+    ],
+    "categories": [
+      "dairy product",
+      "ultra-processed food",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "yaourt",
+    "plural": "yaourts"
+  },
+  "eau": {
+    "picto_id": 32464,
+    "url": "https://static.arasaac.org/pictograms/32464/32464_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "beverage",
+      "core vocabulary"
+    ],
+    "categories": [
+      "beverage",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "eau",
+    "plural": "eaux"
+  },
+  "lait": {
+    "picto_id": 2445,
+    "url": "https://static.arasaac.org/pictograms/2445/2445_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "beverage",
+      "animal-based food",
+      "dairy product",
+      "core vocabulary"
+    ],
+    "categories": [
+      "beverage",
+      "dairy product",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "lait",
+    "plural": "laits"
+  },
+  "jus": {
+    "picto_id": 11461,
+    "url": "https://static.arasaac.org/pictograms/11461/11461_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "beverage",
+      "core vocabulary"
+    ],
+    "categories": [
+      "beverage",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "jus",
+    "plural": "jus"
+  },
+  "the": {
+    "picto_id": 29802,
+    "url": "https://static.arasaac.org/pictograms/29802/29802_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "beverage"
+    ],
+    "categories": [
+      "beverage"
+    ],
+    "keyword": "thé",
+    "plural": "thés"
+  },
+  "chocolat chaud": {
+    "picto_id": 6448,
+    "url": "https://static.arasaac.org/pictograms/6448/6448_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "beverage"
+    ],
+    "categories": [
+      "beverage"
+    ],
+    "keyword": "chocolat",
+    "plural": "chocolats"
+  },
+  "lit": {
+    "picto_id": 25900,
+    "url": "https://static.arasaac.org/pictograms/25900/25900_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "furniture",
+      "core vocabulary"
+    ],
+    "categories": [
+      "furniture",
+      "core vocabulary-object"
+    ],
+    "keyword": "lit",
+    "plural": "lits"
+  },
+  "canape": {
+    "picto_id": 25479,
+    "url": "https://static.arasaac.org/pictograms/25479/25479_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "furniture",
+      "core vocabulary"
+    ],
+    "categories": [
+      "furniture",
+      "core vocabulary-object"
+    ],
+    "keyword": "canapé",
+    "plural": "canapés"
+  },
+  "armoire": {
+    "picto_id": 2258,
+    "url": "https://static.arasaac.org/pictograms/2258/2258_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "furniture",
+      "core vocabulary"
+    ],
+    "categories": [
+      "furniture",
+      "core vocabulary-object"
+    ],
+    "keyword": "armoire",
+    "plural": "armoires"
+  },
+  "bureau": {
+    "picto_id": 2916,
+    "url": "https://static.arasaac.org/pictograms/2916/2916_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "furniture"
+    ],
+    "categories": [
+      "furniture"
+    ],
+    "keyword": "bureau de travail",
+    "plural": "bureaux de travail"
+  },
+  "etagere": {
+    "picto_id": 2386,
+    "url": "https://static.arasaac.org/pictograms/2386/2386_500.png",
+    "score": 13.5,
+    "tags": [],
+    "categories": [],
+    "keyword": "étagère",
+    "plural": "étagères"
+  },
+  "pantalon": {
+    "picto_id": 2565,
+    "url": "https://static.arasaac.org/pictograms/2565/2565_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "fashion",
+      "clothes",
+      "core vocabulary"
+    ],
+    "categories": [
+      "clothes",
+      "core vocabulary-object"
+    ],
+    "keyword": "pantalon",
+    "plural": "pantalons"
+  },
+  "tee-shirt": {
+    "picto_id": 2309,
+    "url": "https://static.arasaac.org/pictograms/2309/2309_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "fashion",
+      "clothes",
+      "core vocabulary"
+    ],
+    "categories": [
+      "clothes",
+      "core vocabulary-object"
+    ],
+    "keyword": "tee-shirt",
+    "plural": "tee-shirts"
+  },
+  "robe": {
+    "picto_id": 2613,
+    "url": "https://static.arasaac.org/pictograms/2613/2613_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "fashion",
+      "clothes"
+    ],
+    "categories": [
+      "clothes",
+      "fashion"
+    ],
+    "keyword": "robe",
+    "plural": "robes"
+  },
+  "pull": {
+    "picto_id": 2436,
+    "url": "https://static.arasaac.org/pictograms/2436/2436_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "fashion",
+      "clothes",
+      "core vocabulary"
+    ],
+    "categories": [
+      "clothes",
+      "core vocabulary-object"
+    ],
+    "keyword": "pull-over",
+    "plural": "pull-overs"
+  },
+  "manteau": {
+    "picto_id": 2242,
+    "url": "https://static.arasaac.org/pictograms/2242/2242_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "fashion",
+      "clothes",
+      "core vocabulary"
+    ],
+    "categories": [
+      "clothes",
+      "core vocabulary-object",
+      "fashion"
+    ],
+    "keyword": "manteau",
+    "plural": "manteaux"
+  },
+  "chaussures": {
+    "picto_id": 2775,
+    "url": "https://static.arasaac.org/pictograms/2775/2775_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "fashion",
+      "footwear",
+      "core vocabulary"
+    ],
+    "categories": [
+      "footwear",
+      "core vocabulary-object"
+    ],
+    "keyword": "chaussures",
+    "plural": null
+  },
+  "chaussettes": {
+    "picto_id": 2298,
+    "url": "https://static.arasaac.org/pictograms/2298/2298_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "fashion",
+      "clothes",
+      "core vocabulary"
+    ],
+    "categories": [
+      "clothes",
+      "core vocabulary-object"
+    ],
+    "keyword": "chaussettes",
+    "plural": null
+  },
+  "chapeau": {
+    "picto_id": 2572,
+    "url": "https://static.arasaac.org/pictograms/2572/2572_500.png",
+    "score": 13.5,
+    "tags": [
+      "object",
+      "fashion",
+      "accessories",
+      "clothes"
+    ],
+    "categories": [
+      "accessories",
+      "fashion",
+      "clothes"
+    ],
+    "keyword": "chapeau",
+    "plural": "chapeaux"
+  },
+  "medecin": {
+    "picto_id": 6561,
+    "url": "https://static.arasaac.org/pictograms/6561/6561_500.png",
+    "score": 13.5,
+    "tags": [
+      "health",
+      "medicine",
+      "professional",
+      "work",
+      "core vocabulary"
+    ],
+    "categories": [
+      "health personnel",
+      "sanitary professional",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "médecin",
+    "plural": "médecins"
+  },
+  "infirmier": {
+    "picto_id": 6050,
+    "url": "https://static.arasaac.org/pictograms/6050/6050_500.png",
+    "score": 13.5,
+    "tags": [
+      "health",
+      "medicine",
+      "professional",
+      "work",
+      "core vocabulary"
+    ],
+    "categories": [
+      "health personnel",
+      "sanitary professional",
+      "core vocabulary-knowledge",
+      "core vocabulary-work"
+    ],
+    "keyword": "infirmier",
+    "plural": "infirmiers"
+  },
+  "enseignant": {
+    "picto_id": 6556,
+    "url": "https://static.arasaac.org/pictograms/6556/6556_500.png",
+    "score": 13.5,
+    "tags": [
+      "education",
+      "professional",
+      "work",
+      "core vocabulary"
+    ],
+    "categories": [
+      "educational staff",
+      "education professionals",
+      "core vocabulary-education",
+      "core vocabulary-work"
+    ],
+    "keyword": "enseignant",
+    "plural": "enseignants"
+  },
+  "policier": {
+    "picto_id": 37367,
+    "url": "https://static.arasaac.org/pictograms/37367/37367_500.png",
+    "score": 13.5,
+    "tags": [
+      "work",
+      "professional",
+      "tertiary sector",
+      "defense",
+      "security",
+      "core vocabulary"
+    ],
+    "categories": [
+      "professional",
+      "security and defense",
+      "core vocabulary-work"
+    ],
+    "keyword": "policier",
+    "plural": "policiers"
+  },
+  "pompier": {
+    "picto_id": 6066,
+    "url": "https://static.arasaac.org/pictograms/6066/6066_500.png",
+    "score": 13.5,
+    "tags": [
+      "work",
+      "professional",
+      "tertiary sector",
+      "defense",
+      "security",
+      "core vocabulary"
+    ],
+    "categories": [
+      "professional",
+      "security and defense",
+      "core vocabulary-work"
+    ],
+    "keyword": "pompier",
+    "plural": "pompiers"
+  },
+  "boulanger": {
+    "picto_id": 3358,
+    "url": "https://static.arasaac.org/pictograms/3358/3358_500.png",
+    "score": 13.5,
+    "tags": [
+      "work",
+      "professional",
+      "feeding",
+      "food",
+      "ultra-processed food",
+      "dessert",
+      "baking"
+    ],
+    "categories": [
+      "professional",
+      "baking"
+    ],
+    "keyword": "boulanger",
+    "plural": "boulangers"
+  },
+  "cuisinier": {
+    "picto_id": 30526,
+    "url": "https://static.arasaac.org/pictograms/30526/30526_500.png",
+    "score": 13.5,
+    "tags": [
+      "work",
+      "professional",
+      "feeding",
+      "cookery",
+      "core vocabulary"
+    ],
+    "categories": [
+      "professional",
+      "cookery",
+      "core vocabulary-work",
+      "core vocabulary-feeding"
+    ],
+    "keyword": "cuisinier",
+    "plural": "cuisiniers"
+  },
+  "chauffeur": {
+    "picto_id": 3019,
+    "url": "https://static.arasaac.org/pictograms/3019/3019_500.png",
+    "score": 13.5,
+    "tags": [
+      "movement",
+      "traffic",
+      "road safety",
+      "mode of transport",
+      "land transport"
+    ],
+    "categories": [
+      "road safety",
+      "land transport"
+    ],
+    "keyword": "conducteur",
+    "plural": "conducteurs"
+  },
+  "football": {
+    "picto_id": 16743,
+    "url": "https://static.arasaac.org/pictograms/16743/16743_500.png",
+    "score": 13.5,
+    "tags": [
+      "leisure",
+      "sport",
+      "sport modality",
+      "football"
+    ],
+    "categories": [
+      "sport modality",
+      "football",
+      "core vocabulary-leisure"
+    ],
+    "keyword": "football",
+    "plural": null
+  },
+  "basket": {
+    "picto_id": 10166,
+    "url": "https://static.arasaac.org/pictograms/10166/10166_500.png",
+    "score": 13.5,
+    "tags": [
+      "leisure",
+      "sport",
+      "sport modality",
+      "basketball"
+    ],
+    "categories": [
+      "sport modality",
+      "basketball",
+      "core vocabulary-leisure"
+    ],
+    "keyword": "basket",
+    "plural": null
+  },
+  "tennis": {
+    "picto_id": 10158,
+    "url": "https://static.arasaac.org/pictograms/10158/10158_500.png",
+    "score": 13.5,
+    "tags": [
+      "leisure",
+      "sport",
+      "sport modality"
+    ],
+    "categories": [
+      "sport modality"
+    ],
+    "keyword": "tennis",
+    "plural": null
+  },
+  "natation": {
+    "picto_id": 25038,
+    "url": "https://static.arasaac.org/pictograms/25038/25038_500.png",
+    "score": 13.5,
+    "tags": [
+      "leisure",
+      "sport",
+      "swimming",
+      "sport modality"
+    ],
+    "categories": [
+      "swimming",
+      "sport modality"
+    ],
+    "keyword": "natation",
+    "plural": null
+  },
+  "velo": {
+    "picto_id": 6935,
+    "url": "https://static.arasaac.org/pictograms/6935/6935_500.png",
+    "score": 13.5,
+    "tags": [
+      "movement",
+      "traffic",
+      "mode of transport",
+      "land transport",
+      "leisure",
+      "sport",
+      "cycling",
+      "road safety",
+      "core vocabulary"
+    ],
+    "categories": [
+      "land transport",
+      "cycling",
+      "road safety",
+      "core vocabulary-movement"
+    ],
+    "keyword": "bicyclette",
+    "plural": "bicyclettes"
+  },
+  "course": {
+    "picto_id": 11205,
+    "url": "https://static.arasaac.org/pictograms/11205/11205_500.png",
+    "score": 13.5,
+    "tags": [
+      "leisure",
+      "sport",
+      "sport modality",
+      "event",
+      "sport event",
+      "athletics"
+    ],
+    "categories": [
+      "sport modality",
+      "sport event",
+      "athletics"
+    ],
+    "keyword": "course",
+    "plural": null
+  },
+  "judo": {
+    "picto_id": 21943,
+    "url": "https://static.arasaac.org/pictograms/21943/21943_500.png",
+    "score": 13.5,
+    "tags": [
+      "leisure",
+      "sport",
+      "sport modality"
+    ],
+    "categories": [
+      "sport modality"
+    ],
+    "keyword": "prise",
+    "plural": "prises"
+  },
+  "piano": {
+    "picto_id": 2521,
+    "url": "https://static.arasaac.org/pictograms/2521/2521_500.png",
+    "score": 13.5,
+    "tags": [
+      "music",
+      "musical instrument",
+      "string instrument",
+      "keyboard instrument",
+      "core vocabulary"
+    ],
+    "categories": [
+      "string instrument",
+      "keyboard instrument",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "piano",
+    "plural": "pianos"
+  },
+  "guitare": {
+    "picto_id": 2417,
+    "url": "https://static.arasaac.org/pictograms/2417/2417_500.png",
+    "score": 13.5,
+    "tags": [
+      "music",
+      "musical instrument",
+      "string instrument",
+      "event",
+      "popular event",
+      "fiestas del pilar",
+      "core vocabulary"
+    ],
+    "categories": [
+      "string instrument",
+      "fiestas del pilar",
+      "core vocabulary-knowledge",
+      "core vocabulary-time"
+    ],
+    "keyword": "guitare",
+    "plural": "guitares"
+  },
+  "violon": {
+    "picto_id": 2615,
+    "url": "https://static.arasaac.org/pictograms/2615/2615_500.png",
+    "score": 13.5,
+    "tags": [
+      "music",
+      "musical instrument",
+      "string instrument"
+    ],
+    "categories": [
+      "string instrument"
+    ],
+    "keyword": "violon",
+    "plural": "violons"
+  },
+  "tambour": {
+    "picto_id": 2578,
+    "url": "https://static.arasaac.org/pictograms/2578/2578_500.png",
+    "score": 13.5,
+    "tags": [
+      "music",
+      "musical instrument",
+      "percussion instrument",
+      "core vocabulary"
+    ],
+    "categories": [
+      "percussion instrument",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "tambour",
+    "plural": "tambours"
+  },
+  "trompette": {
+    "picto_id": 2607,
+    "url": "https://static.arasaac.org/pictograms/2607/2607_500.png",
+    "score": 13.5,
+    "tags": [
+      "music",
+      "musical instrument",
+      "wind instrument",
+      "core vocabulary"
+    ],
+    "categories": [
+      "wind instrument",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "trompette",
+    "plural": "trompettes"
+  },
+  "flute": {
+    "picto_id": 2396,
+    "url": "https://static.arasaac.org/pictograms/2396/2396_500.png",
+    "score": 13.5,
+    "tags": [
+      "music",
+      "musical instrument",
+      "wind instrument"
+    ],
+    "categories": [
+      "wind instrument"
+    ],
+    "keyword": "flûte",
+    "plural": "flûtes"
+  },
+  "rose": {
+    "picto_id": 3151,
+    "url": "https://static.arasaac.org/pictograms/3151/3151_500.png",
+    "score": 13.5,
+    "tags": [
+      "plant",
+      "flower",
+      "core vocabulary"
+    ],
+    "categories": [
+      "flower",
+      "core vocabulary-living being"
+    ],
+    "keyword": "rose",
+    "plural": "roses"
+  },
+  "orange": {
+    "picto_id": 2888,
+    "url": "https://static.arasaac.org/pictograms/2888/2888_500.png",
+    "score": 13.5,
+    "tags": [
+      "color",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "color",
+      "core vocabulary-object"
+    ],
+    "keyword": "orange",
+    "plural": "orange"
+  },
+  "rond": {
+    "picto_id": 4603,
+    "url": "https://static.arasaac.org/pictograms/4603/4603_500.png",
+    "score": 13.5,
+    "tags": [
+      "shape",
+      "mathematics",
+      "geometry",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "shape",
+      "geometry",
+      "core vocabulary-object"
+    ],
+    "keyword": "cercle",
+    "plural": "cercles"
+  },
+  "carre": {
+    "picto_id": 4616,
+    "url": "https://static.arasaac.org/pictograms/4616/4616_500.png",
+    "score": 13.5,
+    "tags": [
+      "shape",
+      "mathematics",
+      "geometry",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "shape",
+      "geometry",
+      "core vocabulary-object",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "carré",
+    "plural": "carré"
+  },
+  "triangle": {
+    "picto_id": 2604,
+    "url": "https://static.arasaac.org/pictograms/2604/2604_500.png",
+    "score": 13.5,
+    "tags": [
+      "music",
+      "musical instrument",
+      "percussion instrument"
+    ],
+    "categories": [
+      "percussion instrument"
+    ],
+    "keyword": "triangle",
+    "plural": "triangles"
+  },
+  "rectangle": {
+    "picto_id": 4731,
+    "url": "https://static.arasaac.org/pictograms/4731/4731_500.png",
+    "score": 13.5,
+    "tags": [
+      "shape",
+      "mathematics",
+      "geometry",
+      "object",
+      "core vocabulary"
+    ],
+    "categories": [
+      "shape",
+      "geometry",
+      "core vocabulary-object",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "rectangle",
+    "plural": "rectangles"
+  },
+  "etoile": {
+    "picto_id": 2752,
+    "url": "https://static.arasaac.org/pictograms/2752/2752_500.png",
+    "score": 13.5,
+    "tags": [
+      "astronomy"
+    ],
+    "categories": [
+      "astronomy"
+    ],
+    "keyword": "étoile",
+    "plural": "étoiles"
+  },
+  "cœur": {
+    "picto_id": 2715,
+    "url": "https://static.arasaac.org/pictograms/2715/2715_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "physiology",
+      "human physiology",
+      "circulatory system"
+    ],
+    "categories": [
+      "human anatomy",
+      "circulatory system",
+      "human body"
+    ],
+    "keyword": "coeur",
+    "plural": "coeurs"
+  },
+  "soleil": {
+    "picto_id": 7252,
+    "url": "https://static.arasaac.org/pictograms/7252/7252_500.png",
+    "score": 13.5,
+    "tags": [
+      "astronomy",
+      "meteorology",
+      "atmospheric phenomena",
+      "leisure",
+      "outdoor activity",
+      "beach"
+    ],
+    "categories": [
+      "astronomy",
+      "atmospheric phenomena",
+      "core vocabulary-knowledge",
+      "beach"
+    ],
+    "keyword": "soleil",
+    "plural": "soleils"
+  },
+  "pluie": {
+    "picto_id": 3123,
+    "url": "https://static.arasaac.org/pictograms/3123/3123_500.png",
+    "score": 13.5,
+    "tags": [
+      "meteorology",
+      "atmospheric phenomena",
+      "spring"
+    ],
+    "categories": [
+      "atmospheric phenomena",
+      "spring"
+    ],
+    "keyword": "pluie",
+    "plural": "pluies"
+  },
+  "neige": {
+    "picto_id": 3135,
+    "url": "https://static.arasaac.org/pictograms/3135/3135_500.png",
+    "score": 13.5,
+    "tags": [
+      "meteorology",
+      "atmospheric phenomena",
+      "event",
+      "popular event",
+      "christmas",
+      "winter"
+    ],
+    "categories": [
+      "atmospheric phenomena",
+      "christmas",
+      "winter"
+    ],
+    "keyword": "neige",
+    "plural": null
+  },
+  "vent": {
+    "picto_id": 7259,
+    "url": "https://static.arasaac.org/pictograms/7259/7259_500.png",
+    "score": 13.5,
+    "tags": [
+      "meteorology",
+      "atmospheric phenomena",
+      "autumn"
+    ],
+    "categories": [
+      "atmospheric phenomena",
+      "autumn"
+    ],
+    "keyword": "vent",
+    "plural": "vents"
+  },
+  "nuage": {
+    "picto_id": 2883,
+    "url": "https://static.arasaac.org/pictograms/2883/2883_500.png",
+    "score": 13.5,
+    "tags": [
+      "meteorology",
+      "atmospheric phenomena"
+    ],
+    "categories": [
+      "atmospheric phenomena"
+    ],
+    "keyword": "nuage",
+    "plural": "nuages"
+  },
+  "content": {
+    "picto_id": 35547,
+    "url": "https://static.arasaac.org/pictograms/35547/35547_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "adjective",
+      "qualifying adjective",
+      "psychology",
+      "feeling",
+      "emotion",
+      "core vocabulary"
+    ],
+    "categories": [
+      "qualifying adjective",
+      "feeling",
+      "core vocabulary-communication",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "content",
+    "plural": null
+  },
+  "triste": {
+    "picto_id": 35545,
+    "url": "https://static.arasaac.org/pictograms/35545/35545_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "adjective",
+      "qualifying adjective",
+      "psychology",
+      "feeling",
+      "emotion",
+      "core vocabulary"
+    ],
+    "categories": [
+      "qualifying adjective",
+      "feeling",
+      "core vocabulary-communication",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "triste",
+    "plural": null
+  },
+  "en colere": {
+    "picto_id": 35539,
+    "url": "https://static.arasaac.org/pictograms/35539/35539_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "adjective",
+      "qualifying adjective",
+      "psychology",
+      "feeling",
+      "emotion",
+      "core vocabulary"
+    ],
+    "categories": [
+      "qualifying adjective",
+      "feeling",
+      "core vocabulary-communication",
+      "core vocabulary-knowledge"
+    ],
+    "keyword": "fâché",
+    "plural": null
+  },
+  "peur": {
+    "picto_id": 10261,
+    "url": "https://static.arasaac.org/pictograms/10261/10261_500.png",
+    "score": 13.5,
+    "tags": [
+      "psychology",
+      "feeling",
+      "emotion",
+      "human response",
+      "event",
+      "popular event",
+      "halloween"
+    ],
+    "categories": [
+      "feeling",
+      "human response",
+      "halloween"
+    ],
+    "keyword": "peur",
+    "plural": "peurs"
+  },
+  "surpris": {
+    "picto_id": 35529,
+    "url": "https://static.arasaac.org/pictograms/35529/35529_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "adjective",
+      "qualifying adjective",
+      "psychology",
+      "feeling",
+      "emotion",
+      "core vocabulary"
+    ],
+    "categories": [
+      "qualifying adjective",
+      "feeling",
+      "core vocabulary-communication"
+    ],
+    "keyword": "surpris",
+    "plural": null
+  },
+  "fatigue": {
+    "picto_id": 35537,
+    "url": "https://static.arasaac.org/pictograms/35537/35537_500.png",
+    "score": 13.5,
+    "tags": [
+      "communication",
+      "language",
+      "adjective",
+      "qualifying adjective",
+      "psychology",
+      "feeling",
+      "emotion",
+      "human body",
+      "body sensation",
+      "covid-19",
+      "core vocabulary"
+    ],
+    "categories": [
+      "qualifying adjective",
+      "feeling",
+      "body sensation",
+      "covid-19",
+      "core vocabulary-communication",
+      "core vocabulary-knowledge",
+      "core vocabulary-living being",
+      "core vocabulary-miscellaneous"
+    ],
+    "keyword": "fatigué",
+    "plural": null
+  },
+  "tete": {
+    "picto_id": 2673,
+    "url": "https://static.arasaac.org/pictograms/2673/2673_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy"
+    ],
+    "categories": [
+      "human anatomy"
+    ],
+    "keyword": "tête",
+    "plural": "têtes"
+  },
+  "main": {
+    "picto_id": 2928,
+    "url": "https://static.arasaac.org/pictograms/2928/2928_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "physiology",
+      "human physiology",
+      "senses"
+    ],
+    "categories": [
+      "human anatomy",
+      "senses"
+    ],
+    "keyword": "main droite ",
+    "plural": "mains droites"
+  },
+  "pied": {
+    "picto_id": 25327,
+    "url": "https://static.arasaac.org/pictograms/25327/25327_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "physiology",
+      "human physiology",
+      "locomotor system",
+      "core vocabulary"
+    ],
+    "categories": [
+      "human anatomy",
+      "locomotor system",
+      "core vocabulary-living being"
+    ],
+    "keyword": "pied",
+    "plural": "pieds"
+  },
+  "bras": {
+    "picto_id": 2669,
+    "url": "https://static.arasaac.org/pictograms/2669/2669_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "core vocabulary"
+    ],
+    "categories": [
+      "human anatomy",
+      "core vocabulary-living being"
+    ],
+    "keyword": "bras",
+    "plural": null
+  },
+  "jambe": {
+    "picto_id": 8666,
+    "url": "https://static.arasaac.org/pictograms/8666/8666_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "core vocabulary"
+    ],
+    "categories": [
+      "human anatomy",
+      "core vocabulary-living being"
+    ],
+    "keyword": "jambe",
+    "plural": "jambes"
+  },
+  "œil": {
+    "picto_id": 6573,
+    "url": "https://static.arasaac.org/pictograms/6573/6573_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "physiology",
+      "human physiology",
+      "senses",
+      "visual system",
+      "health",
+      "medicine",
+      "ophthalmology"
+    ],
+    "categories": [
+      "human anatomy",
+      "senses",
+      "visual system",
+      "ophthalmology"
+    ],
+    "keyword": "oeil",
+    "plural": null
+  },
+  "bouche": {
+    "picto_id": 2663,
+    "url": "https://static.arasaac.org/pictograms/2663/2663_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "human physiology",
+      "physiology",
+      "digestive system",
+      "respiratory system",
+      "covid-19",
+      "core vocabulary"
+    ],
+    "categories": [
+      "human anatomy",
+      "digestive system",
+      "respiratory system",
+      "covid-19",
+      "core vocabulary-living being",
+      "core vocabulary-miscellaneous"
+    ],
+    "keyword": "bouche",
+    "plural": "bouches"
+  },
+  "nez": {
+    "picto_id": 2887,
+    "url": "https://static.arasaac.org/pictograms/2887/2887_500.png",
+    "score": 13.5,
+    "tags": [
+      "human body",
+      "anatomy",
+      "human anatomy",
+      "physiology",
+      "human physiology",
+      "senses",
+      "respiratory system",
+      "covid-19",
+      "core vocabulary"
+    ],
+    "categories": [
+      "human anatomy",
+      "senses",
+      "respiratory system",
+      "covid-19",
+      "core vocabulary-living being",
+      "core vocabulary-miscellaneous"
+    ],
+    "keyword": "nez",
+    "plural": null
+  },
+  "voiture": {
+    "picto_id": 2339,
+    "url": "https://static.arasaac.org/pictograms/2339/2339_500.png",
+    "score": 13.5,
+    "tags": [
+      "movement",
+      "traffic",
+      "mode of transport",
+      "land transport",
+      "road safety",
+      "core vocabulary"
+    ],
+    "categories": [
+      "land transport",
+      "road safety",
+      "core vocabulary-movement"
+    ],
+    "keyword": "voiture",
+    "plural": "voitures"
+  },
+  "bus": {
+    "picto_id": 38090,
+    "url": "https://static.arasaac.org/pictograms/38090/38090_500.png",
+    "score": 13.5,
+    "tags": [
+      "movement",
+      "traffic",
+      "mode of transport",
+      "land transport"
+    ],
+    "categories": [
+      "land transport"
+    ],
+    "keyword": "bus",
+    "plural": "bus"
+  },
+  "camion": {
+    "picto_id": 6956,
+    "url": "https://static.arasaac.org/pictograms/6956/6956_500.png",
+    "score": 13.5,
+    "tags": [
+      "movement",
+      "traffic",
+      "mode of transport",
+      "land transport",
+      "core vocabulary"
+    ],
+    "categories": [
+      "land transport",
+      "core vocabulary-movement"
+    ],
+    "keyword": "camion",
+    "plural": "camions"
+  },
+  "train": {
+    "picto_id": 2603,
+    "url": "https://static.arasaac.org/pictograms/2603/2603_500.png",
+    "score": 13.5,
+    "tags": [
+      "movement",
+      "traffic",
+      "mode of transport",
+      "land transport"
+    ],
+    "categories": [
+      "land transport"
+    ],
+    "keyword": "train",
+    "plural": "trains"
+  },
+  "moto": {
+    "picto_id": 7166,
+    "url": "https://static.arasaac.org/pictograms/7166/7166_500.png",
+    "score": 13.5,
+    "tags": [
+      "movement",
+      "traffic",
+      "mode of transport",
+      "land transport",
+      "road safety",
+      "core vocabulary"
+    ],
+    "categories": [
+      "land transport",
+      "road safety",
+      "core vocabulary-movement"
+    ],
+    "keyword": "motocyclette",
+    "plural": "motocyclettes"
+  },
+  "avion": {
+    "picto_id": 2264,
+    "url": "https://static.arasaac.org/pictograms/2264/2264_500.png",
+    "score": 13.5,
+    "tags": [
+      "movement",
+      "traffic",
+      "mode of transport",
+      "air transport",
+      "core vocabulary"
+    ],
+    "categories": [
+      "aerial transport",
+      "core vocabulary-movement"
+    ],
+    "keyword": "avion",
+    "plural": "avions"
+  },
+  "maison": {
+    "picto_id": 6964,
+    "url": "https://static.arasaac.org/pictograms/6964/6964_500.png",
+    "score": 13.5,
+    "tags": [
+      "place",
+      "building",
+      "home",
+      "core vocabulary",
+      "document",
+      "person",
+      "animal",
+      "domestic"
+    ],
+    "categories": [
+      "residential building",
+      "core vocabulary-place",
+      "document",
+      "person according to their age",
+      "domestic animal"
+    ],
+    "keyword": "maison",
+    "plural": "maisons"
+  },
+  "parc": {
+    "picto_id": 2859,
+    "url": "https://static.arasaac.org/pictograms/2859/2859_500.png",
+    "score": 13.5,
+    "tags": [
+      "place",
+      "facility",
+      "recreational facility",
+      "leisure",
+      "playground",
+      "core vocabulary"
+    ],
+    "categories": [
+      "playground",
+      "entertainment facility",
+      "core vocabulary-place",
+      "core vocabulary-leisure"
+    ],
+    "keyword": "parc",
+    "plural": "parcs"
+  },
+  "hopital": {
+    "picto_id": 36210,
+    "url": "https://static.arasaac.org/pictograms/36210/36210_500.png",
+    "score": 13.5,
+    "tags": [
+      "health",
+      "medicine",
+      "medical center",
+      "place",
+      "building",
+      "core vocabulary"
+    ],
+    "categories": [
+      "medical center",
+      "medical centre",
+      "core vocabulary-knowledge",
+      "core vocabulary-place"
+    ],
+    "keyword": "hôpital",
+    "plural": "hôpitaux"
+  },
+  "magasin": {
+    "picto_id": 35695,
+    "url": "https://static.arasaac.org/pictograms/35695/35695_500.png",
+    "score": 13.5,
+    "tags": [
+      "place",
+      "building",
+      "trade",
+      "work",
+      "tertiary sector",
+      "core vocabulary"
+    ],
+    "categories": [
+      "commercial building",
+      "trade",
+      "core vocabulary-place",
+      "core vocabulary-work"
+    ],
+    "keyword": "magasin",
+    "plural": "magasins"
+  },
+  "piscine": {
+    "picto_id": 30516,
+    "url": "https://static.arasaac.org/pictograms/30516/30516_500.png",
+    "score": 13.5,
+    "tags": [
+      "leisure",
+      "sport",
+      "facility",
+      "sports facility",
+      "place",
+      "swimming",
+      "outdoor activity",
+      "swimming pool",
+      "communication",
+      "signaling system",
+      "core vocabulary"
+    ],
+    "categories": [
+      "sports facility",
+      "swimming",
+      "swimming pool",
+      "signaling system",
+      "core vocabulary-leisure",
+      "core vocabulary-communication"
+    ],
+    "keyword": "piscine",
+    "plural": "piscines"
+  },
+  "rue": {
+    "picto_id": 2299,
+    "url": "https://static.arasaac.org/pictograms/2299/2299_500.png",
+    "score": 13.5,
+    "tags": [
+      "place",
+      "urban area",
+      "core vocabulary"
+    ],
+    "categories": [
+      "urban area",
+      "core vocabulary-place",
+      "place"
+    ],
+    "keyword": "rue",
+    "plural": "Rues"
+  },
+  "poireau": {
+    "picto_id": 3378,
+    "url": "https://static.arasaac.org/pictograms/3378/3378_500.png",
+    "score": 13.5,
+    "tags": [
+      "feeding",
+      "food",
+      "plant-based food",
+      "vegetable"
+    ],
+    "categories": [
+      "vegetable"
+    ],
+    "keyword": "poireau",
+    "plural": "poireaux"
   }
 }
