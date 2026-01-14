@@ -9,34 +9,84 @@ sys.path.insert(0, str(project_root / "src"))
 
 from qcmgen.nlp import extract_facts
 from qcmgen.qcm import generate_qcms
-from qcmgen.pictos.resolve import resolve_term_to_picto_strict
+from qcmgen.pictos.resolve import resolve_term_to_picto_strict, _load_cache
 
 
 st.set_page_config(page_title="IME QCM Generator", layout="centered")
 st.title("IME QCM Generator (v0)")
 
 # padding pour les choix
-st.markdown(
-    """
+st.markdown("""
 <style>
-.choice-card {
-  padding: 10px;
-  border: 3px solid transparent;
+/* Fond blanc + texte noir */
+.stApp { background-color: #ffffff; color: #111827; }
+
+/* Typo plus douce */
+html, body, [class*="css"]  {
+  font-family: "Nunito", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+/* Titres */
+h1, h2, h3 { color: #111827; }
+
+/* Boutons */
+.stButton > button {
+  background: #22c55e;
+  color: white;
   border-radius: 12px;
-  text-align: center;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+}
+.stButton > button:hover {
+  background: #16a34a;
+}
+
+/* Zones de saisie */
+textarea, input {
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 10px !important;
+}
+
+/* Cartes de choix */
+.choice-card {
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 10px;
 }
 .choice-card.selected {
-  border-color: #22c55e; /* vert */
-  background: rgba(34, 197, 94, 0.10);
+  border-color: #22c55e;
+  background: #ecfdf3;
 }
+
+/* Petits badges / labels */
 .choice-label {
-  margin-top: 6px;
   font-size: 14px;
+  color: #111827;
 }
+/* Forcer le texte des widgets en noir */
+label, .stMarkdown, .stCheckbox, .stRadio, .stToggle, .stSelectbox, .stTextInput, .stTextArea {
+  color: #111827 !important;
+}
+
+/* Label du toggle (Use LLM) */
+div[data-testid="stToggle"] label {
+  color: #111827 !important;
+}
+/* Labels et help text des widgets Streamlit */
+div[data-testid="stWidgetLabel"] label,
+div[data-testid="stWidgetLabel"] p,
+div[data-testid="stCaption"],
+div[data-testid="stHelp"] p {
+  color: #111827 !important;
+  opacity: 1 !important;
+}
+
 </style>
-""",
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
+
 
 
 if "qcms" not in st.session_state:
@@ -97,14 +147,31 @@ if generate:
 
         st.session_state.qcms = all_qcms
 
-        # Filtrer les QCM sans pictos valides
-        filtered = []
-        for q in st.session_state.qcms:
-            urls = [ _picto_url_for(c) for c in q.choices ]
-            if all(u is not None for u in urls):
-                filtered.append(q)
+        print(len(st.session_state.qcms), "QCM générés avant filtrage.")
 
-        st.session_state.qcms = filtered
+        # load in cache answers that are not in the cache already
+        cache_fr = _load_cache('fr')
+        for q in st.session_state.qcms:
+            answer = q.choices[q.answer_index]
+            if answer not in cache_fr:
+                print(q.qtype)
+                resolve_term_to_picto_strict(answer, expected_type = q.qtype)
+
+        filter = True
+        if filter:
+
+            # Filtrer les QCM sans pictos valides
+            filtered = []
+            for q in st.session_state.qcms:
+                urls = [ _picto_url_for(c) for c in q.choices ]
+                if all(u is not None for u in urls):
+                    filtered.append(q)
+                else:
+                    print(f'Removing question {q.question} with choices {q.choices}')
+
+            st.session_state.qcms = filtered
+
+            print(len(st.session_state.qcms), "QCM générés après filtrage.")
 
 
         # Nettoyer les anciennes réponses
@@ -137,7 +204,7 @@ else:
 
                 url = _picto_url_for(choice_text)
                 if url:
-                    st.image(url, use_container_width=True)
+                    st.image(url, width='content')
                 else:
                     st.write("❓")
 
