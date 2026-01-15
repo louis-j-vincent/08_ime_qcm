@@ -235,6 +235,7 @@ def display_qcm_question(i, qcm, debug_mode = False):
             # Le bouton est la vraie interaction
             if st.button("Sélectionner" if not is_selected else "Sélectionné ✅", key=f"{key}_btn_{j}"):
                 st.session_state[key] = j
+                st.rerun() #actualisation directe pour voir ce qui a été selectionné
 
             st.markdown("</div>", unsafe_allow_html=True)
 
