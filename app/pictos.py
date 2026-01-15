@@ -1,5 +1,7 @@
 import unicodedata
 import streamlit as st
+from qcmgen.pictos.resolve import resolve_term_to_picto_strict
+
 
 def cleanup_term(term: str) -> str:
     """
