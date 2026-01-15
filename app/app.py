@@ -6,7 +6,7 @@ import sys
 project_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_root / "src"))
 
-from pictos import * # robust functions to extract pictos
+from pictos import get_picto_with_variants # robust functions to extract pictos
 
 from qcmgen.nlp import extract_facts
 from qcmgen.qcm import generate_qcms
@@ -74,7 +74,10 @@ def init_session_state():
     if "input_text" not in st.session_state:
         st.session_state.input_text = ""
 
-def generate_qcms_from_text(text: str = "", use_llm_generation: bool = False, require_pictos: bool = True):
+def generate_qcms_from_text(text: str = "", 
+                            use_llm_generation: bool = False, 
+                            require_pictos: bool = True,
+                            items: dict = {}):
     """
     Given some text, generate qcm questions and answers
     """
@@ -91,7 +94,7 @@ def generate_qcms_from_text(text: str = "", use_llm_generation: bool = False, re
 
             from qcmgen.llm import generate_qcms_from_text_llm
 
-            qcms = generate_qcms_from_text_llm(text)
+            qcms = generate_qcms_from_text_llm(text, items)
             st.session_state.qcms = qcms
 
         else:
@@ -227,6 +230,7 @@ init_session_state()
 if st.session_state.should_generate_text:
     paragraphs, items = generate_text(st.session_state.nb_phrases, st.session_state.complexity)
     st.session_state.input_text = "\n \n".join(paragraphs)
+    print(items)
     st.session_state.should_generate_text = False
 
 # instantiate buttons
@@ -259,8 +263,13 @@ if llm_text_generation:
 if generate:
     st.subheader("Generation du QCM en cours ... ")
     st.session_state.has_generated = True
-    #if generate_text_with_llm:
-    qcms = generate_qcms_from_text(text, use_llm_generation)
+    if generate_text_with_llm:
+        qcms = generate_qcms_from_text(text = text, 
+                                       use_llm_generation = use_llm_generation, 
+                                       items = items)
+    else:
+        qcms = generate_qcms_from_text(text = text, 
+                                            use_llm_generation = use_llm_generation) 
     st.session_state.qcms = qcms
 
 if not qcms:
