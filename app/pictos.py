@@ -1,4 +1,5 @@
 import unicodedata
+import streamlit as st
 
 def cleanup_term(term: str) -> str:
     """
