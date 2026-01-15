@@ -3,10 +3,18 @@ import streamlit as st
 from pathlib import Path
 import sys
 
+# for pdfs
+import tempfile
+import requests
+from io import BytesIO
+from PIL import Image
+from fpdf import FPDF
+
+
 project_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_root / "src"))
 
-from pictos import get_picto_with_variants # robust functions to extract pictos
+from picto_helpers import get_picto_with_variants # robust functions to extract pictos
 
 from qcmgen.nlp import extract_facts
 from qcmgen.qcm import generate_qcms
@@ -39,7 +47,7 @@ def render_controls():
         generate = st.button("Générer les QCM", type ="primary")
         reset = st.button("Réinitialiser", type = "primary")
     with col2:
-        use_llm_generation = st.toggle("Utiliser l'assistant IA pour générer le QCM", value=False)
+        use_llm_generation = st.toggle("Utiliser l'assistant IA pour générer le QCM", value=True)
         llm_text_generation = st.toggle("Utiliser l'assistant IA pour générer des phrases", value=False)
         debug_mode = st.checkbox("Afficher debug", value = False)
 
@@ -146,7 +154,22 @@ def display_qcm_question(i, qcm, debug_mode = False):
     Given one qcm element, display it on the streamlit app
     """
 
+    st.markdown(f"*{qcm.paragraph}*")
+
     st.markdown(f"**QCM {i}:** {qcm.question}")
+
+    keep_key = f"keep_qcm_{i}"
+    edit_key = f"edit_qcm_{i}"
+
+    if keep_key not in st.session_state:
+        st.session_state[keep_key] = True
+
+    if edit_key not in st.session_state:
+        st.session_state[edit_key] = qcm.question
+
+    st.checkbox("Garder cette question", key=keep_key)
+    st.text_input("Reformuler la question", key=edit_key)
+
 
     key = f"qcm_{i}"
     if key not in st.session_state:
@@ -222,6 +245,74 @@ def render_qcms(qcms):
     if st.session_state.submitted and qcms:
         evaluation_and_scoring(qcms)
 
+def _download_picto_to_file(url: str) -> str | None:
+    if not url:
+        return None
+    r = requests.get(url, timeout=10)
+    if r.status_code != 200:
+        return None
+
+    img = Image.open(BytesIO(r.content)).convert("RGB")
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+    img.save(tmp.name, "JPEG")
+    return tmp.name
+
+
+def build_pdf(qcms, picto_urls, edited_questions) -> bytes:
+    pdf = FPDF(unit="mm", format="A4")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.set_font("Helvetica", size=13)
+
+    for i, q in enumerate(qcms, start=1):
+        paragraph = q.paragraph or ""
+        question = edited_questions.get(f"edit_qcm_{i}", q.question)
+
+        if paragraph:
+            pdf.set_font("Helvetica", style="", size=11)
+            pdf.multi_cell(0, 6, f"Contexte: {paragraph}")
+            pdf.ln(1)
+
+        pdf.set_font("Helvetica", style="B", size=13)
+        pdf.multi_cell(0, 8, f"{i}. {question}")
+        pdf.ln(2)
+
+        pdf.set_font("Helvetica", size=11)
+        # Affichage des choix sur une seule ligne (4 pictos)
+        urls = picto_urls.get(i, [])
+        img_size = 18
+        cell_width = 45  # largeur par picto + texte
+
+        start_x = pdf.get_x()
+        y = pdf.get_y()
+
+        for j, choice in enumerate(q.choices):
+            x = start_x + j * cell_width
+            pdf.set_xy(x, y)
+
+            url = urls[j] if j < len(urls) else None
+            img_path = _download_picto_to_file(url)
+
+            if img_path:
+                pdf.image(img_path, x=x, y=y, w=img_size, h=img_size)
+                pdf.set_xy(x + img_size + 2, y + 5)
+                #pdf.cell(cell_width - img_size - 2, 6, choice)
+            #else:
+                #pdf.cell(cell_width, 6, choice)
+
+        # sauter une ligne après la rangée
+        pdf.ln(img_size + 6)
+
+    return pdf.output(dest="S").encode("latin1")
+
+def collect_selected_questions(qcms) -> list[str]:
+    selected = []
+    for i, q in enumerate(qcms, start=1):
+        if st.session_state.get(f"keep_qcm_{i}", False):
+            selected.append(st.session_state.get(f"edit_qcm_{i}", q.question))
+    return selected
+
+
 # instantiate styling
 apply_styles()
 
@@ -230,7 +321,6 @@ init_session_state()
 if st.session_state.should_generate_text:
     paragraphs, items = generate_text(st.session_state.nb_phrases, st.session_state.complexity)
     st.session_state.input_text = "\n \n".join(paragraphs)
-    print(items)
     st.session_state.should_generate_text = False
 
 # instantiate buttons
@@ -251,7 +341,7 @@ if reset:
 if llm_text_generation:
     # afficher options sur le nombre de phrases à générer et leur complexité
     nb_phrases = st.slider("Nombre de phrases", min_value=1, max_value=10, value=3)
-    complexity = st.slider("Complexité", min_value=1, max_value=5, value=2)
+    complexity = st.slider("Complexité", min_value=1, max_value=5, value=3)
     st.session_state.nb_phrases, st.session_state.complexity = nb_phrases, complexity
     generate_text_with_llm = st.button("Générer le texte", type = "primary")
 
@@ -281,5 +371,22 @@ if not qcms:
 else:
     st.subheader("QCM générés")
     render_qcms(qcms)
+
+selected_questions = collect_selected_questions(qcms)
+
+if st.button("Préparer le PDF"):
+    selected_qcms = [q for i, q in enumerate(qcms, start=1) if st.session_state.get(f"keep_qcm_{i}", False)]
+    edited_questions = {k: v for k, v in st.session_state.items() if k.startswith("edit_qcm_")}
+
+    st.session_state.pdf_bytes = build_pdf(selected_qcms, st.session_state.picto_urls, edited_questions)
+
+if st.session_state.get("pdf_bytes"):
+    st.download_button(
+        "Télécharger le PDF",
+        data=st.session_state.pdf_bytes,
+        file_name="qcm_selection.pdf",
+        mime="application/pdf"
+    )
+
 
 
