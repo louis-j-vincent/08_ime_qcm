@@ -67,7 +67,8 @@ def generate_qcms_from_text_llm(text: str, items: dict = {}) -> list:
                         choices=choices,
                         answer_index=choices.index(question["answer"]),
                         qtype=question.get("qtype", question["category"]),
-                        rationale=question.get("rationale", "")
+                        rationale=question.get("rationale", ""),
+                        paragraph=item["sentence"]
                     )
                 )
 

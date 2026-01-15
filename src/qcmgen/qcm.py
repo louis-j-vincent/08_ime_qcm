@@ -51,6 +51,7 @@ class QCM:
     answer_index: int
     qtype: QuestionType
     rationale: Optional[str] = None
+    paragraph: Optional[str] = None  # contexte/source
 
 from typing import Dict
 
@@ -169,8 +170,10 @@ def payload_to_qcm(payload: QcmPayload) -> QCM:
         choices=choices,
         answer_index=answer_index,
         qtype=payload.qtype,
-        rationale=payload.rationale
-    )   
+        rationale=payload.rationale,
+        paragraph=None,
+    )
+ 
 
 # Fonctions d'expansion pour chaque type de question
 
