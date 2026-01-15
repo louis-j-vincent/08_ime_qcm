@@ -1,53 +1,68 @@
 {
   "animal": [
     "chat", "chien", "cheval", "vache", "mouton", "cochon",
-    "lapin", "souris", "oiseau", "poisson", "lion", "éléphant"
+    "lapin", "souris", "oiseau", "poisson", "lion", "éléphant",
+    "chèvre", "poule", "canard", "âne", "coq", "chaton"
   ],
   "food": [
     "pomme", "banane", "poire", "pain", "fromage", "gâteau",
-    "riz", "pâtes", "soupe", "chocolat", "yaourt"
+    "riz", "pâtes", "soupe", "chocolat", "yaourt",
+    "carotte", "tomate", "salade", "poulet", "œuf"
   ],
   "drink": [
-    "eau", "lait", "jus", "café", "thé", "chocolat chaud"
+    "eau", "lait", "jus", "café", "thé", "chocolat chaud",
+    "soda", "limonade", "sirop"
   ],
   "furniture": [
-    "table", "chaise", "lit", "canapé", "armoire", "bureau", "étagère"
+    "table", "chaise", "lit", "canapé", "armoire", "bureau", "étagère",
+    "fauteuil", "commode", "lampe", "table basse"
   ],
   "clothing": [
     "pantalon", "tee-shirt", "robe", "pull", "manteau",
-    "chaussures", "chaussettes", "chapeau"
+    "chaussures", "chaussettes", "chapeau",
+    "short", "jupe", "ceinture", "gants", "écharpe"
   ],
   "profession": [
     "médecin", "infirmier", "enseignant", "policier",
-    "pompier", "boulanger", "cuisinier", "chauffeur"
+    "pompier", "boulanger", "cuisinier", "chauffeur",
+    "dentiste", "vétérinaire", "serveur", "coiffeur", "boucher"
   ],
   "sport": [
     "football", "basket", "tennis", "natation",
-    "vélo", "course", "judo", "gymnastique"
+    "vélo", "course", "judo", "gymnastique",
+    "handball", "rugby", "ski", "danse", "escalade"
   ],
   "musical_instrument": [
-    "piano", "guitare", "violon", "tambour", "trompette", "flûte"
+    "piano", "guitare", "violon", "tambour", "trompette", "flûte",
+    "saxophone", "clarinette", "batterie", "accordéon"
   ],
   "color": [
     "rouge", "bleu", "vert", "jaune", "rose",
-    "noir", "blanc", "gris", "orange"
+    "noir", "blanc", "gris", "orange",
+    "marron", "violet", "turquoise"
   ],
   "shape": [
-    "rond", "carré", "triangle", "rectangle", "étoile", "cœur"
+    "rond", "carré", "triangle", "rectangle", "étoile", "cœur",
+    "ovale", "losange", "hexagone"
   ],
   "weather": [
-    "soleil", "pluie", "neige", "vent", "nuage", "orage"
+    "soleil", "pluie", "neige", "vent", "nuage", "orage",
+    "brouillard", "tempête", "grêle", "arc-en-ciel"
   ],
   "emotion": [
-    "content", "triste", "en colère", "peur", "surpris", "fatigué"
+    "content", "triste", "en colère", "peur", "surpris", "fatigué",
+    "heureux", "calme", "malade", "fier"
   ],
   "body_part": [
-    "tête", "main", "pied", "bras", "jambe", "œil", "bouche", "nez"
+    "tête", "main", "pied", "bras", "jambe", "œil", "bouche", "nez",
+    "oreille", "dos", "genou", "doigt", "ventre"
   ],
   "vehicle": [
-    "voiture", "vélo", "bus", "camion", "train", "moto", "avion"
+    "voiture", "vélo", "bus", "camion", "train", "moto", "avion",
+    "bateau", "tramway", "hélicoptère", "trottinette"
   ],
   "place": [
-    "maison", "école", "parc", "hôpital", "magasin", "piscine", "rue"
+    "maison", "école", "parc", "hôpital", "magasin", "piscine", "rue",
+    "plage", "montagne", "forêt", "cuisine", "classe"
   ]
 }
