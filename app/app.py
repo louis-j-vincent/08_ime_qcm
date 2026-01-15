@@ -11,6 +11,7 @@ from pictos import * # robust functions to extract pictos
 from qcmgen.nlp import extract_facts
 from qcmgen.qcm import generate_qcms
 from qcmgen.pictos.resolve import resolve_term_to_picto_strict, _load_cache
+from qcmgen.sentence_generation import generate_text
 
 def apply_styles():
 
@@ -27,17 +28,22 @@ def render_controls():
 
     # instantiate text regions and buttons
 
-    text = st.text_area('Texte (FR, court)', height = 150, placeholder = "Entrez un texte en français ici...")
+    text = st.text_area(
+        'Texte (FR, court)', 
+        height = 150, 
+        placeholder = "Entrez un texte en français ici...",
+        key = "input_text")
 
     col1, col2 = st.columns([1,1])
     with col1:
         generate = st.button("Générer les QCM", type ="primary")
         reset = st.button("Réinitialiser", type = "primary")
     with col2:
-        use_llm_generation = st.toggle("Utiliser LLM", value=False)
+        use_llm_generation = st.toggle("Utiliser l'assistant IA pour générer le QCM", value=False)
+        llm_text_generation = st.toggle("Utiliser l'assistant IA pour générer des phrases", value=False)
         debug_mode = st.checkbox("Afficher debug", value = False)
 
-    return text, use_llm_generation, generate, debug_mode, reset
+    return text, use_llm_generation, llm_text_generation, generate, debug_mode, reset
 
 def init_session_state():
     """
@@ -58,6 +64,15 @@ def init_session_state():
 
     if "picto_urls" not in st.session_state:
         st.session_state.picto_urls = {}
+
+    if "llm_text_generation" not in st.session_state:
+        st.session_state.llm_text_generation = False
+
+    if "should_generate_text" not in st.session_state:
+        st.session_state.should_generate_text = False
+
+    if "input_text" not in st.session_state:
+        st.session_state.input_text = ""
 
 def generate_qcms_from_text(text: str = "", use_llm_generation: bool = False, require_pictos: bool = True):
     """
@@ -207,11 +222,16 @@ def render_qcms(qcms):
 # instantiate styling
 apply_styles()
 
-# instantiate buttons
-text, use_llm_generation, generate, debug_mode, reset = render_controls()
-
 # instantiate session state()
 init_session_state()
+if st.session_state.should_generate_text:
+    paragraphs, items = generate_text(st.session_state.nb_phrases, st.session_state.complexity)
+    st.session_state.input_text = "\n \n".join(paragraphs)
+    st.session_state.should_generate_text = False
+
+# instantiate buttons
+text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls()
+
 qcms = st.session_state.qcms
 
 if reset:
@@ -224,9 +244,22 @@ if reset:
     for key in keys_to_delete:
         del st.session_state[key]
 
+if llm_text_generation:
+    # afficher options sur le nombre de phrases à générer et leur complexité
+    nb_phrases = st.slider("Nombre de phrases", min_value=1, max_value=10, value=3)
+    complexity = st.slider("Complexité", min_value=1, max_value=5, value=2)
+    st.session_state.nb_phrases, st.session_state.complexity = nb_phrases, complexity
+    generate_text_with_llm = st.button("Générer le texte", type = "primary")
+
+    if generate_text_with_llm:
+        st.session_state.should_generate_text = True
+        st.rerun()
+        
+
 if generate:
     st.subheader("Generation du QCM en cours ... ")
     st.session_state.has_generated = True
+    #if generate_text_with_llm:
     qcms = generate_qcms_from_text(text, use_llm_generation)
     st.session_state.qcms = qcms
 
