@@ -1,5 +1,8 @@
 streamlit>=1.37
 spacy>=3.7
-reportlab>=4.2
+openai
+python-dotenv
 requests>=2.31
 fpdf
+Pillow
+tqdm
