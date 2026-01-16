@@ -13,6 +13,7 @@ from fpdf import FPDF
 
 project_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_root / "src"))
+sys.path.insert(0, str(project_root / "app"))
 
 from picto_helpers import get_picto_with_variants # robust functions to extract pictos
 

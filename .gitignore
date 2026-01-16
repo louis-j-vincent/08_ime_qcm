@@ -10,6 +10,8 @@ build/
 .venv/
 venv/
 .env
+**/.env
+src/qcmgen/.env
 
 # Jupyter
 .ipynb_checkpoints/
