@@ -22,3 +22,8 @@ Thumbs.db
 
 # Streamlit
 .streamlit/secrets.toml
+
+# local cache files
+.streamlit/data/arasaac_all_fr.json
+.streamlit/data/arasaac_cache_fr.json
+
