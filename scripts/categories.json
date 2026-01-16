@@ -64,5 +64,13 @@
   "place": [
     "maison", "école", "parc", "hôpital", "magasin", "piscine", "rue",
     "plage", "montagne", "forêt", "cuisine", "classe"
+  ],
+  "person": [
+    "fille", "garçon", "bébé", "papi", "mamie"
+  ],
+  "object": [
+    "cartable", "stylo", "crayon",
+    "gomme", "règle", "ballon", "poupée",
+    "boîte", "clé", "verre", "assiette", "cuillère", "fourchette"
   ]
 }
