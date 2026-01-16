@@ -129,7 +129,9 @@ def generate_qcms_from_text(text: str = "",
             filtered = []
             counter = 0
             for q in qcms:
-                urls = [ get_picto_with_variants(c)[1] for c in q.choices ]
+                expected_type = q.qtype if isinstance(q.qtype, str) else None
+                print(expected_type)
+                urls = [ get_picto_with_variants(c, expected_type=expected_type)[1] for c in q.choices ]
                 if all(u is not None for u in urls):
                     counter += 1
                     filtered.append(q)
@@ -257,7 +259,6 @@ def _download_picto_to_file(url: str) -> str | None:
     img.save(tmp.name, "JPEG")
     return tmp.name
 
-
 def build_pdf(qcms, picto_urls, edited_questions) -> bytes:
     pdf = FPDF(unit="mm", format="A4")
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -348,6 +349,9 @@ if llm_text_generation:
     if generate_text_with_llm:
         st.session_state.should_generate_text = True
         st.rerun()
+
+else:
+    generate_text_with_llm = False
         
 
 if generate:

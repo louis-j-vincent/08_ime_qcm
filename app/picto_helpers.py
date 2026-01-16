@@ -48,17 +48,17 @@ def term_variants(term: str) -> list[str]:
 
     return list(variants)
 
-def get_picto_with_variants(term: str):
+def get_picto_with_variants(term: str, expected_type: str | None = None):
     """
     Loops on all possible variants, starting with the cleanup regular version, and returns the first match
     """
     for candidate in term_variants(term):
-        url = get_picto_url(candidate)
+        url = get_picto_url(candidate, expected_type=expected_type)
         if url:
             return candidate, url
     return None, None
 
-def get_picto_url(term: str) -> str | None:
+def get_picto_url(term: str, expected_type: str | None = None) -> str | None:
     """
     Fetch pictogram image url given the pictogram term
     """
@@ -72,7 +72,7 @@ def get_picto_url(term: str) -> str | None:
     if term_norm in cache:
         return cache[term_norm]
 
-    r = resolve_term_to_picto_strict(term_norm, lang="fr")
+    r = resolve_term_to_picto_strict(term_norm, lang="fr", expected_type=expected_type)
     url = r.url if r else None
     cache[term_norm] = url
     return url
