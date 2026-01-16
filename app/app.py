@@ -3,13 +3,17 @@ import streamlit as st
 from pathlib import Path
 import sys
 
-# for pdfs
+# generate pdfs
 import tempfile
 import requests
 from io import BytesIO
 from PIL import Image
 from fpdf import FPDF
 
+# read pdfs
+import re
+import fitz  # PyMuPDF
+from io import BytesIO
 
 project_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_root / "src"))
@@ -314,6 +318,40 @@ def collect_selected_questions(qcms) -> list[str]:
             selected.append(st.session_state.get(f"edit_qcm_{i}", q.question))
     return selected
 
+def extract_sentences_from_pdf_bytes(pdf_bytes: bytes) -> list[str]:
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    sentences = []
+
+    for page in doc:
+        blocks = page.get_text("blocks")
+        blocks = sorted(blocks, key=lambda b: (b[1], b[0])) # sort by descending order on page
+
+        keep = False
+
+        for b in blocks:
+            text = b[4].strip()
+            if not text:
+                continue
+
+            parts = re.split(r'[.!?]\s+', text)
+            for p in parts:
+                p = p.strip()
+                if p:
+                    if keep:
+                        if is_valid_sentence(p):
+                            sentences.append(p)
+                    if 'Lis les phrases' in p: #next sentences will be kept
+                        keep = True
+
+    return sentences
+
+def is_valid_sentence(sentence : str):
+    """
+    Given a sentence string, chose if we keep it or not
+    """
+    forbidden = ['(', ')', '"', '“', '”']
+    return ( len(sentence.split(' ')) > 1 ) & ('TitLine' not in sentence) & (not any(ch in sentence for ch in forbidden))
+
 
 # instantiate styling
 apply_styles()
@@ -327,6 +365,17 @@ if st.session_state.should_generate_text:
 
 # instantiate buttons
 text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls()
+
+st.subheader("Importer un PDF")
+pdf_file = st.file_uploader("Uploader un PDF", type=["pdf"])
+
+if pdf_file is not None:
+    pdf_bytes = pdf_file.read()
+    sentences = extract_sentences_from_pdf_bytes(pdf_bytes)
+
+    st.markdown("**Lis les phrases**")
+    for s in sentences:
+        st.write(f"- {s}")
 
 qcms = st.session_state.qcms
 
