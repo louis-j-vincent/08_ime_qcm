@@ -174,15 +174,10 @@ def generate_qcms_from_text(text: str = "",
 
     return qcms
 
-def display_qcm_question(i, qcm, debug_mode = False):
+def display_qcm_question(i, qcm, debug_mode = False, rect = None, page = None):
     """
     Given one qcm element, display it on the streamlit app
     """
-
-    #st.markdown(f"*{qcm.paragraph}*")
-    st.markdown(f"<div class='dyslexic'>{qcm.paragraph}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='dyslexic'> Question {i}: {qcm.question}</div>", unsafe_allow_html=True)
-
 
     keep_key = f"keep_qcm_{i}"
     edit_key = f"edit_qcm_{i}"
@@ -193,8 +188,23 @@ def display_qcm_question(i, qcm, debug_mode = False):
     if edit_key not in st.session_state:
         st.session_state[edit_key] = qcm.question
 
-    st.checkbox("Garder cette question", key=keep_key)
-    st.text_input("Reformuler la question", key=edit_key)
+
+    col_check, col_img = st.columns([1, 6])
+
+    with col_check:
+        st.checkbox("Garder", key=keep_key)
+
+    with col_img:
+        # depending on if we have image or not
+        if page is not None:
+            pix = page.get_pixmap(clip=rect, dpi=200)
+            st.image(pix.tobytes("png"))
+
+        else:
+            st.markdown(f"<div class='dyslexic'>{qcm.paragraph}</div>", unsafe_allow_html=True)
+
+        st.markdown(f"<div class='dyslexic'> Question {i}: {qcm.question}</div>", unsafe_allow_html=True)
+        st.text_input("Reformuler la question", key=edit_key)
 
 
     key = f"qcm_{i}"
@@ -257,10 +267,20 @@ def evaluation_and_scoring(qcms):
             st.write(f"   Ta réponse : {user_choice}")
             st.write(f"   Bonne réponse : {good_choice}")
 
-def render_qcms(qcms):
+def render_qcms(qcms, doc = None, selected_sources = None):
 
     for i, qcm in enumerate(qcms, start=1):
-        display_qcm_question(i, qcm, debug_mode)
+        rect = None
+        page = None
+        if (
+            selected_sources
+            and qcm.paragraph_idx is not None
+            and qcm.paragraph_idx < len(selected_sources)
+            and doc is not None
+        ):
+            idx_page, idx_doc_pages, rect = selected_sources[qcm.paragraph_idx]
+            page = doc[idx_page]
+        display_qcm_question(i, qcm, debug_mode, rect=rect, page=page)
         
     # create new submit button to evaluate online
     submit = st.button("Soumettre les réponses", type="primary")
@@ -424,7 +444,6 @@ def extract_paragraph_bboxes(page, num_page: int = 0):
 
     return paragraphs
 
-
 def is_valid_sentence(sentence : str):
     """
     Given a sentence string, chose if we keep it or not
@@ -515,16 +534,17 @@ def render_text_from_pdf(doc, doc_pages):
                     keep_key = f"keep_p{page_idx}_s{idx}"
                     st.checkbox("Garder", key=keep_key, value = True)
 
-                if page_idx == 13:
-                    print(idx, sentence)
 
     selected_sentences = []
+    selected_sources = []  # [(page_idx, phrase_idx, rect), ...]
+
     for page_idx in selected_pages:
-        for idx, (sentence, _) in enumerate(doc_pages[page_idx]):
+        for idx, (sentence, rect) in enumerate(doc_pages[page_idx]):
             if st.session_state.get(f"keep_p{page_idx}_s{idx}"):
                 selected_sentences.append(sentence)
+                selected_sources.append((page_idx, idx, rect))
 
-    return selected_sentences
+    return selected_sentences, selected_sources
 
 # instantiate styling
 apply_styles()
@@ -543,7 +563,10 @@ pdf_uploaded = pdf_file is not None
 if pdf_uploaded:
 
     doc, doc_pages = parse_pdf(pdf_file)
-    selected_sentences = render_text_from_pdf(doc, doc_pages)
+    selected_sentences, selected_sources = render_text_from_pdf(doc, doc_pages)
+    st.session_state.selected_sources = selected_sources
+
+    print(selected_sources, selected_sentences)
 
 # instantiate buttons
 text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls(pdf_uploaded)
@@ -582,6 +605,7 @@ if generate:
         print("Generating from pdf")
         qcms = generate_qcms_from_text(paragraphs = selected_sentences,
                                        use_llm_generation= use_llm_generation)
+
     elif generate_text_with_llm:
         qcms = generate_qcms_from_text(text = text, 
                                        use_llm_generation = use_llm_generation, 
@@ -600,7 +624,10 @@ if not qcms:
             st.info("Aucune question générée (texte trop court ou structure non reconnue).")
 else:
     st.subheader("QCM générés")
-    render_qcms(qcms)
+    if pdf_uploaded:
+        render_qcms(qcms, selected_sources = selected_sources, doc = doc)
+    else:
+        render_qcms(qcms)
 
 selected_questions = collect_selected_questions(qcms)
 
@@ -617,6 +644,3 @@ if st.session_state.get("pdf_bytes"):
         file_name="qcm_selection.pdf",
         mime="application/pdf"
     )
-
-
-

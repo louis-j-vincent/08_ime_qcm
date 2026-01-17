@@ -72,5 +72,10 @@
     "cartable", "stylo", "crayon",
     "gomme", "règle", "ballon", "poupée",
     "boîte", "clé", "verre", "assiette", "cuillère", "fourchette"
+  ],
+  "action": [
+    "manger", "boire", "lire", "écrire", "jouer", "courir",
+    "marcher", "sauter", "dormir", "chanter", "danser", "dessiner",
+    "laver", "cuisiner", "ouvrir", "fermer"
   ]
 }
