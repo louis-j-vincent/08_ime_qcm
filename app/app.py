@@ -363,52 +363,57 @@ def extract_sentences_from_pdf_bytes(pdf_bytes: bytes) -> list[str]:
 
     return sentences
 
-def extract_sentence_bboxes(page, num_page : int = 0):
+def extract_paragraph_bboxes(page, num_page: int = 0):
     data = page.get_text("dict")
-    sentences = []
+    paragraphs = []
     current_text = ""
     current_rect = None
     keep = False
 
+    gap_threshold = 8  # ajuste si besoin (plus grand = paragraphes plus longs)
+
     for i, block in enumerate(data["blocks"]):
         if block["type"] != 0:
             continue
+
+        prev_y1 = None
+
         for j, line in enumerate(block["lines"]):
             line_text = "".join(span["text"] for span in line["spans"]).strip()
             if not line_text:
                 continue
 
-            #print("LINE:", line_text)
-
-            if "Lis les phrases" in line_text:
-                print("FOUND trigger")
-
-            # Déclencheur "Lis les phrases"
             if "Lis les phrases" in line_text:
                 keep = True
                 continue
-
             if not keep:
                 continue
+            if not is_valid_sentence(line_text):
+                continue
 
-            if is_valid_sentence(line_text):
+            y0, y1 = line["bbox"][1], line["bbox"][3]
 
-                # Ajouter cette ligne au buffer
-                current_text += (" " if current_text else "") + line_text
-                line_rect = fitz.Rect(line["bbox"])
-                current_rect = line_rect if current_rect is None else current_rect | line_rect
+            # Si gros saut vertical -> on ferme le paragraphe courant
+            if prev_y1 is not None and (y0 - prev_y1) > gap_threshold and current_text:
+                paragraphs.append((current_text.strip(), current_rect))
+                current_text = ""
+                current_rect = None
 
-                # Fin de phrase si la ligne se termine par . ! ?
-                if re.search(r"[.!?]\s*$", line_text):
-                    #sentences.append((current_text.strip(), current_rect))
-                    #current_text = ""
-                    #current_rect = None
-                    #sentences.append(current_text.strip())
-                    sentences.append((current_text.strip(), current_rect))
-                    pix = page.get_pixmap(clip=line["bbox"], dpi=200)
-                    pix.save(f'export/phrase_{num_page}_{i}_{j}.png')
+            # Ajouter la ligne au paragraphe courant
+            current_text += (" " if current_text else "") + line_text
+            line_rect = fitz.Rect(line["bbox"])
+            current_rect = line_rect if current_rect is None else current_rect | line_rect
 
-    return sentences
+            prev_y1 = y1
+
+        # fin de bloc: on ferme le paragraphe si ouvert
+        if current_text:
+            paragraphs.append((current_text.strip(), current_rect))
+            current_text = ""
+            current_rect = None
+
+    return paragraphs
+
 
 def is_valid_sentence(sentence : str):
     """
@@ -473,20 +478,53 @@ if pdf_file is not None:
     #sentences = extract_sentence_bboxes(pdf_bytes)
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
 
-    doc_dict = {}
+    doc_pages = {}
 
     sentences = []
     for i,page in enumerate(doc):
 
-        sentences_and_bboxes = extract_sentence_bboxes(page, num_page = i)
-        sentences.extend([s[0] for s in sentences_and_bboxes])
-        
-        doc_dict[f'page_{i}'] = {j: s for j, s in enumerate(sentences_and_bboxes)}  # each elt of sentences_and_bboxes is (sentence,bbox)
+        sentences_and_bboxes = extract_paragraph_bboxes(page, num_page = i)
+        if len(sentences_and_bboxes) > 0:
 
-    st.markdown("**Lis les phrases**")
-    for s in sentences:
-        st.markdown(f"<div class='dyslexic'>- {s}</div>", unsafe_allow_html=True)
+            sentences.extend([s[0] for s in sentences_and_bboxes])
+            doc_pages[i] = sentences_and_bboxes  # each elt of sentences_and_bboxes is (sentence,bbox)
 
+    st.markdown("### Pages disponibles")
+    selected_pages = []
+
+    for page_idx in doc_pages.keys():
+        if st.checkbox(f'Page {page_idx + 1}', key = f'page_{page_idx}'):
+            selected_pages.append(page_idx)
+
+            page = doc[page_idx] # PyMuPDF page object
+            for idx, (sentence, bbox) in enumerate(doc_pages[page_idx]):
+
+                col_check, col_img = st.columns([1,6]) # 2 columns, one for checkbox one for image
+                
+                # générer l’image
+                rect = fitz.Rect(bbox)
+                pix = page.get_pixmap(clip=rect, dpi=200)
+                img_bytes = pix.tobytes("png")
+
+                # checkbox + image
+                with col_img:
+                    st.image(img_bytes)
+                with col_check:
+                    keep_key = f"keep_p{page_idx}_s{idx}"
+                    st.checkbox("Garder", key=keep_key, value = True)
+
+                if page_idx == 13:
+                    print(idx, sentence)
+
+    selected_sentences = []
+    for page_idx in selected_pages:
+        for idx, (sentence, _) in enumerate(doc_pages[page_idx]):
+            if st.session_state.get(f"keep_p{page_idx}_s{idx}"):
+                selected_sentences.append(sentence)
+
+
+
+    
 qcms = st.session_state.qcms
 
 if reset:
