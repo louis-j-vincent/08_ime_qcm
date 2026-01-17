@@ -61,7 +61,12 @@ def generate_qcms_from_text_llm(text: str | None = None,
 
             try:
                 # generate distractors from category
-                distractor_candidates = [elt for elt in CATEGORIES[question["category"]] if elt != question["answer"]]
+                confusables = {c.lower() for c in question.get("confusables", []) if isinstance(c, str)}
+                answer_lower = question["answer"].lower()
+                distractor_candidates = [
+                    elt for elt in CATEGORIES[question["category"]]
+                    if elt.lower() != answer_lower and elt.lower() not in confusables
+                ]
                 distractors = random.sample(distractor_candidates, k=3)
 
                 choices = distractors + [question["answer"]]
@@ -80,7 +85,7 @@ def generate_qcms_from_text_llm(text: str | None = None,
                         choices=choices,
                         answer_index=choices.index(question["answer"]),
                         qtype=question.get("qtype", question["category"]),
-                        paragraph_idx=item["paragraph_index"],
+                        paragraph_idx=item.get("paragraph_index"),
                         rationale="",
                         paragraph=item["paragraph"]
                     )
@@ -92,5 +97,3 @@ def generate_qcms_from_text_llm(text: str | None = None,
         all_qcms.extend(qcms)
 
     return all_qcms
-
-

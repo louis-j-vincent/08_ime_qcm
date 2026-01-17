@@ -30,7 +30,7 @@ Output schema:
       "paragraph_index": number,
       "paragraph": "...",
       "questions": [
-        { "question": string, "answer": string, "category": string }
+        { "question": string, "answer": string, "category": string, "confusables": [string] }
       ]
     }
   ]
@@ -39,7 +39,7 @@ Output schema:
 Allowed categories (use ONLY these):
 animal, food, drink, furniture, clothing, profession, sport,
 musical_instrument, color, shape, weather, emotion, body_part,
-vehicle, place, object, person
+vehicle, place, object, person, action
 
 Rules:
 - Generate exactly num_paragraphs paragraphs.
@@ -50,7 +50,9 @@ Rules:
 - Each paragraph must contain at least one concrete, pictogrammable noun.
 - "paragraph_index" must be the 0-based index of the paragraph in the "paragraphs" array.
 - Questions: natural French, no grammar jargon, no invented words, use names instead of pronouns.
-- Answers: single noun, lowercase, no determiners; must be pictogrammable.
+- Answers: single word, lowercase, no determiners; must be pictogrammable.
+- If category is "action", the answer must be a verb in infinitive.
+- "confusables" is a list of words that would look too similar as pictograms to the correct answer (visual homonyms); use it to help remove confusing distractors.
 - Use category "person" for people (pictogrammable: fille, garçon, homme, femme, monsieur, dame, bébé, etc.).
 - Use category "object" for generic concrete objects that do not fit other categories.
 - Avoid questions that use only pronouns in the subject (e.g. "Qu’est-ce qu’ils ... ?").
