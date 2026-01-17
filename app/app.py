@@ -94,6 +94,7 @@ def init_session_state():
         st.session_state.input_text = ""
 
 def generate_qcms_from_text(text: str = "", 
+                            paragraphs: str | None = None,
                             use_llm_generation: bool = False, 
                             require_pictos: bool = True,
                             items: dict = {}):
@@ -103,7 +104,7 @@ def generate_qcms_from_text(text: str = "",
 
     st.session_state.submitted = False
 
-    if not text.strip():
+    if not (text.strip() or paragraphs):
         st.warning("Veuillez entrer un texte avant de générer des QCM.")
         return []
     
@@ -113,7 +114,10 @@ def generate_qcms_from_text(text: str = "",
 
             from qcmgen.llm import generate_qcms_from_text_llm
 
-            qcms = generate_qcms_from_text_llm(text, items)
+            if paragraphs is not None:
+                qcms = generate_qcms_from_text_llm(paragraphs = paragraphs, items = items)
+            else:
+                qcms = generate_qcms_from_text_llm(text = text, items = items)
             st.session_state.qcms = qcms
 
         else:
@@ -456,23 +460,8 @@ def slugify(text: str, max_len: int = 60) -> str:
     text = re.sub(r"[^a-z0-9]+", "_", text)
     return text.strip("_")[:max_len]
 
-# instantiate styling
-apply_styles()
+def parse_pdf(pdf_file):
 
-# instantiate session state()
-init_session_state()
-if st.session_state.should_generate_text:
-    paragraphs, items = generate_text(st.session_state.nb_phrases, st.session_state.complexity)
-    st.session_state.input_text = "\n \n".join(paragraphs)
-    st.session_state.should_generate_text = False
-
-# instantiate buttons
-text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls()
-
-st.subheader("Importer un PDF")
-pdf_file = st.file_uploader("Uploader un PDF", type=["pdf"])
-
-if pdf_file is not None:
     pdf_bytes = pdf_file.read()
     #sentences = extract_sentences_from_pdf_bytes(pdf_bytes)
     #sentences = extract_sentence_bboxes(pdf_bytes)
@@ -488,6 +477,13 @@ if pdf_file is not None:
 
             sentences.extend([s[0] for s in sentences_and_bboxes])
             doc_pages[i] = sentences_and_bboxes  # each elt of sentences_and_bboxes is (sentence,bbox)
+
+    return doc, doc_pages
+
+def render_text_from_pdf(doc, doc_pages):
+    """
+    Outputs checkboxes for all pages where text has been detected
+    """
 
     st.markdown("### Pages disponibles")
     selected_pages = []
@@ -522,7 +518,28 @@ if pdf_file is not None:
             if st.session_state.get(f"keep_p{page_idx}_s{idx}"):
                 selected_sentences.append(sentence)
 
+    return selected_sentences
 
+# instantiate styling
+apply_styles()
+
+# instantiate session state()
+init_session_state()
+if st.session_state.should_generate_text:
+    paragraphs, items = generate_text(st.session_state.nb_phrases, st.session_state.complexity)
+    st.session_state.input_text = "\n \n".join(paragraphs)
+    st.session_state.should_generate_text = False
+
+# instantiate buttons
+text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls()
+
+st.subheader("Importer un PDF")
+pdf_file = st.file_uploader("Uploader un PDF", type=["pdf"])
+
+if pdf_file is not None:
+
+    doc, doc_pages = parse_pdf(pdf_file)
+    selected_sentences = render_text_from_pdf(doc, doc_pages)
 
     
 qcms = st.session_state.qcms
@@ -555,13 +572,17 @@ else:
 if generate:
     st.subheader("Generation du QCM en cours ... ")
     st.session_state.has_generated = True
-    if generate_text_with_llm:
+    if pdf_file is not None:
+        print("Generating from pdf")
+        qcms = generate_qcms_from_text(paragraphs = selected_sentences,
+                                       use_llm_generation= use_llm_generation)
+    elif generate_text_with_llm:
         qcms = generate_qcms_from_text(text = text, 
                                        use_llm_generation = use_llm_generation, 
                                        items = items)
     else:
         qcms = generate_qcms_from_text(text = text, 
-                                            use_llm_generation = use_llm_generation) 
+                                       use_llm_generation = use_llm_generation) 
     st.session_state.qcms = qcms
 
 if not qcms:
