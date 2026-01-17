@@ -186,7 +186,7 @@ def display_qcm_question(i, qcm, debug_mode = False, rect = None, page = None):
     if keep_key not in st.session_state:
         st.session_state[keep_key] = True
 
-    if edit_key not in st.session_state or st.session_state[edit_key] != qcm.question::
+    if edit_key not in st.session_state or st.session_state[edit_key] != qcm.question:
         st.session_state[edit_key] = qcm.question
 
     col_check, col_img = st.columns([1, 6])
