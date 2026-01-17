@@ -1,2 +1,11 @@
+[server]
+enableStaticServing = true
+
+[[theme.fontFaces]]
+family = "opendyslexic"
+url = "app/static/OpenDyslexic3-Regular.ttf"
+style = "normal"
+weight = 400
+
 [theme]
 base = "light"

@@ -26,13 +26,19 @@ from qcmgen.qcm import generate_qcms
 from qcmgen.pictos.resolve import resolve_term_to_picto_strict, _load_cache
 from qcmgen.sentence_generation import generate_text
 
+import base64
+from pathlib import Path
+
+
 def apply_styles():
 
     st.markdown("""
 <style>
+.dyslexic { font-family: "opendyslexic", sans-serif; }
+</style>
+""", unsafe_allow_html=True)
 
-<\style>
-""", unsafe_allow_html = True)
+
 
 def render_controls():
 
@@ -161,9 +167,12 @@ def display_qcm_question(i, qcm, debug_mode = False):
     Given one qcm element, display it on the streamlit app
     """
 
-    st.markdown(f"*{qcm.paragraph}*")
+    #st.markdown(f"*{qcm.paragraph}*")
+    st.markdown(f"<div class='dyslexic'>{qcm.paragraph}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='dyslexic'> **QCM {i}:** {qcm.question}</div>", unsafe_allow_html=True)
 
-    st.markdown(f"**QCM {i}:** {qcm.question}")
+
+    #st.markdown(f"**QCM {i}:** {qcm.question}")
 
     keep_key = f"keep_qcm_{i}"
     edit_key = f"edit_qcm_{i}"
@@ -265,25 +274,27 @@ def _download_picto_to_file(url: str) -> str | None:
     return tmp.name
 
 def build_pdf(qcms, picto_urls, edited_questions) -> bytes:
+
     pdf = FPDF(unit="mm", format="A4")
+    pdf.add_font("OpenDyslexic", "", "data/open_dyslexic/OpenDyslexic3-Regular.ttf", uni=True)
+    pdf.add_font("OpenDyslexic", "B", "data/open_dyslexic/OpenDyslexic3-Bold.ttf", uni=True)  # si tu as le bold
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font("Helvetica", size=13)
 
     for i, q in enumerate(qcms, start=1):
         paragraph = q.paragraph or ""
         question = edited_questions.get(f"edit_qcm_{i}", q.question)
 
         if paragraph:
-            pdf.set_font("Helvetica", style="", size=11)
+            pdf.set_font("OpenDyslexic", style="", size=11)
             pdf.multi_cell(0, 6, f"Contexte: {paragraph}")
             pdf.ln(1)
 
-        pdf.set_font("Helvetica", style="B", size=13)
+        pdf.set_font("OpenDyslexic", style="B", size=13)
         pdf.multi_cell(0, 8, f"{i}. {question}")
         pdf.ln(2)
 
-        pdf.set_font("Helvetica", size=11)
+        pdf.set_font("OpenDyslexic", size=11)
         # Affichage des choix sur une seule ligne (4 pictos)
         urls = picto_urls.get(i, [])
         img_size = 18
@@ -328,10 +339,19 @@ def extract_sentences_from_pdf_bytes(pdf_bytes: bytes) -> list[str]:
 
         keep = False
 
-        for b in blocks:
+        for i, b in enumerate(blocks):
+            bbox = fitz.Rect(b[0], b[1], b[2], b[3])
             text = b[4].strip()
             if not text:
                 continue
+
+            if "Lis les phrases" in text:
+                keep = True
+                continue
+
+            if keep:
+                pix = page.get_pixmap(clip=bbox, dpi=200)
+                pix.save(f'export/phrase_{i}.png')
 
             parts = re.split(r'[.!?]\s+', text)
             for p in parts:
@@ -340,8 +360,53 @@ def extract_sentences_from_pdf_bytes(pdf_bytes: bytes) -> list[str]:
                     if keep:
                         if is_valid_sentence(p):
                             sentences.append(p)
-                    if 'Lis les phrases' in p: #next sentences will be kept
-                        keep = True
+
+    return sentences
+
+def extract_sentence_bboxes(page, num_page : int = 0):
+    data = page.get_text("dict")
+    sentences = []
+    current_text = ""
+    current_rect = None
+    keep = False
+
+    for i, block in enumerate(data["blocks"]):
+        if block["type"] != 0:
+            continue
+        for j, line in enumerate(block["lines"]):
+            line_text = "".join(span["text"] for span in line["spans"]).strip()
+            if not line_text:
+                continue
+
+            #print("LINE:", line_text)
+
+            if "Lis les phrases" in line_text:
+                print("FOUND trigger")
+
+            # Déclencheur "Lis les phrases"
+            if "Lis les phrases" in line_text:
+                keep = True
+                continue
+
+            if not keep:
+                continue
+
+            if is_valid_sentence(line_text):
+
+                # Ajouter cette ligne au buffer
+                current_text += (" " if current_text else "") + line_text
+                line_rect = fitz.Rect(line["bbox"])
+                current_rect = line_rect if current_rect is None else current_rect | line_rect
+
+                # Fin de phrase si la ligne se termine par . ! ?
+                if re.search(r"[.!?]\s*$", line_text):
+                    #sentences.append((current_text.strip(), current_rect))
+                    #current_text = ""
+                    #current_rect = None
+                    #sentences.append(current_text.strip())
+                    sentences.append((current_text.strip(), current_rect))
+                    pix = page.get_pixmap(clip=line["bbox"], dpi=200)
+                    pix.save(f'export/phrase_{num_page}_{i}_{j}.png')
 
     return sentences
 
@@ -350,8 +415,41 @@ def is_valid_sentence(sentence : str):
     Given a sentence string, chose if we keep it or not
     """
     forbidden = ['(', ')', '"', '“', '”']
-    return ( len(sentence.split(' ')) > 1 ) & ('TitLine' not in sentence) & (not any(ch in sentence for ch in forbidden))
+    is_valid = ( len(sentence.split(' ')) > 1 ) # more than 1 word
+    is_valid &= ('TitLine' not in sentence) # no TitLine string
+    is_valid &= (not any(ch in sentence for ch in forbidden)) # no forbidden character
+    is_valid &= (sentence[0].isupper()) # first letter is in Capital
+    return  is_valid
 
+def color_to_hex(c: int) -> str:
+    r = (c >> 16) & 255
+    g = (c >> 8) & 255
+    b = c & 255
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+def extract_colored_spans(page):
+    spans = []
+    data = page.get_text("dict")
+
+    for block in data["blocks"]:
+        if block["type"] != 0:
+            continue
+        for line in block["lines"]:
+            for span in line["spans"]:
+                text = span["text"].strip()
+                if text:
+                    spans.append({
+                        "text": text,
+                        "color": color_to_hex(span["color"])
+                    })
+    return spans
+
+import re
+
+def slugify(text: str, max_len: int = 60) -> str:
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9]+", "_", text)
+    return text.strip("_")[:max_len]
 
 # instantiate styling
 apply_styles()
@@ -371,11 +469,23 @@ pdf_file = st.file_uploader("Uploader un PDF", type=["pdf"])
 
 if pdf_file is not None:
     pdf_bytes = pdf_file.read()
-    sentences = extract_sentences_from_pdf_bytes(pdf_bytes)
+    #sentences = extract_sentences_from_pdf_bytes(pdf_bytes)
+    #sentences = extract_sentence_bboxes(pdf_bytes)
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+
+    doc_dict = {}
+
+    sentences = []
+    for i,page in enumerate(doc):
+
+        sentences_and_bboxes = extract_sentence_bboxes(page, num_page = i)
+        sentences.extend([s[1] for s in sentences_and_bboxes])
+        
+        doc_dict[f'page_{i}':{i:s for i, s in enumerate(sentences_and_bboxes)}] # each elt of sentences_and_bboxes is (sentence,bbox)
 
     st.markdown("**Lis les phrases**")
     for s in sentences:
-        st.write(f"- {s}")
+        st.markdown(f"<div class='dyslexic'>- {s}</div>", unsafe_allow_html=True)
 
 qcms = st.session_state.qcms
 
