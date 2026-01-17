@@ -2,6 +2,7 @@ import streamlit as st
 
 from pathlib import Path
 import sys
+import os
 
 # generate pdfs
 import tempfile
@@ -9,6 +10,7 @@ import requests
 from io import BytesIO
 from PIL import Image
 from fpdf import FPDF
+
 
 # read pdfs
 import re
@@ -153,7 +155,6 @@ def generate_qcms_from_text(text: str = "",
             counter = 0
             for q in qcms:
                 expected_type = q.qtype if isinstance(q.qtype, str) else None
-                print(expected_type)
                 urls = [ get_picto_with_variants(c, expected_type=expected_type)[1] for c in q.choices ]
                 if all(u is not None for u in urls):
                     counter += 1
@@ -185,9 +186,8 @@ def display_qcm_question(i, qcm, debug_mode = False, rect = None, page = None):
     if keep_key not in st.session_state:
         st.session_state[keep_key] = True
 
-    if edit_key not in st.session_state:
-        st.session_state[edit_key] = qcm.question
-
+    #if edit_key not in st.session_state:
+    st.session_state[edit_key] = qcm.question
 
     col_check, col_img = st.columns([1, 6])
 
@@ -203,9 +203,11 @@ def display_qcm_question(i, qcm, debug_mode = False, rect = None, page = None):
         else:
             st.markdown(f"<div class='dyslexic'>{qcm.paragraph}</div>", unsafe_allow_html=True)
 
-        st.markdown(f"<div class='dyslexic'> Question {i}: {qcm.question}</div>", unsafe_allow_html=True)
-        st.text_input("Reformuler la question", key=edit_key)
+        #st.markdown(f"<div class='dyslexic'> Question {i}: {qcm.question}</div>", unsafe_allow_html=True)
+        st.text_input(f"**Question {i}**", key=edit_key)
 
+    print(qcm.question)
+    print(qcm.choices)
 
     key = f"qcm_{i}"
     if key not in st.session_state:
@@ -303,7 +305,7 @@ def _download_picto_to_file(url: str) -> str | None:
     img.save(tmp.name, "JPEG")
     return tmp.name
 
-def build_pdf(qcms, picto_urls, edited_questions) -> bytes:
+def build_pdf(qcms, picto_urls, edited_questions, selected_sources = None, doc = None) -> bytes:
 
     pdf = FPDF(unit="mm", format="A4")
     pdf.add_font("OpenDyslexic", "", "data/open_dyslexic/OpenDyslexic3-Regular.ttf", uni=True)
@@ -311,30 +313,57 @@ def build_pdf(qcms, picto_urls, edited_questions) -> bytes:
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
+    # parametres pour la taille des pictos affichés
+    img_size = 40
+    cell_width = 50  # largeur par picto + texte
+
     for i, q in enumerate(qcms, start=1):
+
         paragraph = q.paragraph or ""
         question = edited_questions.get(f"edit_qcm_{i}", q.question)
 
-        if paragraph:
+        bottom_margin = 15
+        if pdf.get_y() + img_size + 50 > pdf.h - bottom_margin:
+            pdf.add_page()
+
+        if selected_sources is not None and q.paragraph_idx is not None: # put image of context text extracted from pdf
+            idx_page, idx_doc_pages, rect = selected_sources[q.paragraph_idx]
+            page = doc[idx_page]
+            pix = page.get_pixmap(clip=rect, dpi=200)
+
+            tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+            pix.save(tmp.name)
+
+            pdf.image(tmp.name, x=pdf.get_x(), y=pdf.get_y(), w=160)
+            pdf.ln(15)  # espace sous l'image
+
+            tmp.close()
+            os.unlink(tmp.name)
+
+        elif paragraph:
             pdf.set_font("OpenDyslexic", style="", size=11)
             pdf.multi_cell(0, 6, f"Contexte: {paragraph}")
             pdf.ln(1)
 
         pdf.set_font("OpenDyslexic", style="B", size=13)
         pdf.multi_cell(0, 8, f"{i}. {question}")
-        pdf.ln(2)
+        pdf.ln(10)
 
         pdf.set_font("OpenDyslexic", size=11)
         # Affichage des choix sur une seule ligne (4 pictos)
         urls = picto_urls.get(i, [])
-        img_size = 18
-        cell_width = 45  # largeur par picto + texte
 
         start_x = pdf.get_x()
         y = pdf.get_y()
 
+        # fond blanc + bordure noire
+        pdf.set_draw_color(0, 0, 0)    # bordure noire
+        pdf.set_fill_color(255, 255, 255)  # fond blanc
+        
+
         for j, choice in enumerate(q.choices):
             x = start_x + j * cell_width
+            pdf.rect(x, y, img_size, img_size, style="DF")
             pdf.set_xy(x, y)
 
             url = urls[j] if j < len(urls) else None
@@ -378,10 +407,6 @@ def extract_sentences_from_pdf_bytes(pdf_bytes: bytes) -> list[str]:
             if "Lis les phrases" in text:
                 keep = True
                 continue
-
-            if keep:
-                pix = page.get_pixmap(clip=bbox, dpi=200)
-                pix.save(f'export/phrase_{i}.png')
 
             parts = re.split(r'[.!?]\s+', text)
             for p in parts:
@@ -566,8 +591,6 @@ if pdf_uploaded:
     selected_sentences, selected_sources = render_text_from_pdf(doc, doc_pages)
     st.session_state.selected_sources = selected_sources
 
-    print(selected_sources, selected_sentences)
-
 # instantiate buttons
 text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls(pdf_uploaded)
 
@@ -635,7 +658,11 @@ if st.button("Préparer le PDF"):
     selected_qcms = [q for i, q in enumerate(qcms, start=1) if st.session_state.get(f"keep_qcm_{i}", False)]
     edited_questions = {k: v for k, v in st.session_state.items() if k.startswith("edit_qcm_")}
 
-    st.session_state.pdf_bytes = build_pdf(selected_qcms, st.session_state.picto_urls, edited_questions)
+    st.session_state.pdf_bytes = build_pdf(selected_qcms, 
+                                           st.session_state.picto_urls, 
+                                           edited_questions, 
+                                           selected_sources = selected_sources,
+                                           doc = doc)
 
 if st.session_state.get("pdf_bytes"):
     st.download_button(
