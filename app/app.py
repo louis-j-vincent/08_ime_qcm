@@ -481,7 +481,7 @@ if pdf_file is not None:
         sentences_and_bboxes = extract_sentence_bboxes(page, num_page = i)
         sentences.extend([s[1] for s in sentences_and_bboxes])
         
-        doc_dict[f'page_{i}':{i:s for i, s in enumerate(sentences_and_bboxes)}] # each elt of sentences_and_bboxes is (sentence,bbox)
+        doc_dict[f'page_{i}'] = {j: s for j, s in enumerate(sentences_and_bboxes)}  # each elt of sentences_and_bboxes is (sentence,bbox)
 
     st.markdown("**Lis les phrases**")
     for s in sentences:
