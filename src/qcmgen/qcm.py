@@ -50,6 +50,7 @@ class QCM:
     choices: List[str]
     answer_index: int
     qtype: QuestionType
+    paragraph_idx: Optional[int] = None
     rationale: Optional[str] = None
     paragraph: Optional[str] = None  # contexte/source
 
@@ -268,4 +269,3 @@ def generate_qcms(fact: Fact, max_qcms: int = 6) -> List[QCM]:
     payloads = generate_payloads(fact)
     qcms = [payload_to_qcm(p) for p in payloads]
     return qcms[:max_qcms]
-

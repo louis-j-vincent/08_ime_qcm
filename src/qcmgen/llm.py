@@ -35,7 +35,6 @@ def generate_qcms_from_text_llm(text: str | None = None,
             sentences = [s.strip() for s in text.split('.')]
         else:
             print('No text received')
-        print(sentences)
         resp = client.responses.create(
         model="gpt-4o-mini",
         instructions=llm_prompt,
@@ -61,7 +60,6 @@ def generate_qcms_from_text_llm(text: str | None = None,
         for question in item.get("questions", []):
 
             try:
-
                 # generate distractors from category
                 distractor_candidates = [elt for elt in CATEGORIES[question["category"]] if elt != question["answer"]]
                 distractors = random.sample(distractor_candidates, k=3)
@@ -69,19 +67,27 @@ def generate_qcms_from_text_llm(text: str | None = None,
                 choices = distractors + [question["answer"]]
                 random.shuffle(choices)
 
+
+            except KeyError:
+                print(f'LLM hallucinated a new category: {question["category"]}')
+                choices = None
+
+            if choices is not None:
+
                 qcms.append(
                     QCM(
                         question=question["question"],
                         choices=choices,
                         answer_index=choices.index(question["answer"]),
                         qtype=question.get("qtype", question["category"]),
-                        rationale=question.get("rationale", ""),
-                        paragraph=item["sentence"]
+                        paragraph_idx=item["paragraph_index"],
+                        rationale="",
+                        paragraph=item["paragraph"]
                     )
                 )
 
-            except KeyError:
-                print(f'LLM hallucinated a new category: {question["category"]}')
+            print('last qcm :')
+            print(qcms[-1])
 
         all_qcms.extend(qcms)
 
