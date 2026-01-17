@@ -9,7 +9,9 @@ import random
 from qcmgen.qcm import QCM
 
 
-def generate_qcms_from_text_llm(text: str, items: dict = {}) -> list:
+def generate_qcms_from_text_llm(text: str | None = None, 
+                                paragraphs: dict | None = None, 
+                                items: dict = {}) -> list:
 
     if items == {}:
         # get api key and setup client
@@ -27,7 +29,13 @@ def generate_qcms_from_text_llm(text: str, items: dict = {}) -> list:
         client = OpenAI(api_key=api_key)
 
         # call llm
-        sentences = [s.strip() for s in text.split('.')]
+        if paragraphs is not None:
+            sentences = [s.strip() for s in paragraphs]
+        elif text is not None:
+            sentences = [s.strip() for s in text.split('.')]
+        else:
+            print('No text received')
+        print(sentences)
         resp = client.responses.create(
         model="gpt-4o-mini",
         instructions=llm_prompt,
