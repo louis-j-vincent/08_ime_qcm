@@ -480,29 +480,6 @@ def is_valid_sentence(sentence : str):
     is_valid &= (sentence[0].isupper()) # first letter is in Capital
     return  is_valid
 
-def color_to_hex(c: int) -> str:
-    r = (c >> 16) & 255
-    g = (c >> 8) & 255
-    b = c & 255
-    return f"#{r:02x}{g:02x}{b:02x}"
-
-def extract_colored_spans(page):
-    spans = []
-    data = page.get_text("dict")
-
-    for block in data["blocks"]:
-        if block["type"] != 0:
-            continue
-        for line in block["lines"]:
-            for span in line["spans"]:
-                text = span["text"].strip()
-                if text:
-                    spans.append({
-                        "text": text,
-                        "color": color_to_hex(span["color"])
-                    })
-    return spans
-
 import re
 
 def slugify(text: str, max_len: int = 60) -> str:
