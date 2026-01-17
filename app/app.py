@@ -40,27 +40,35 @@ def apply_styles():
 
 
 
-def render_controls():
+def render_controls(pdf_uploaded : bool = False):
 
     st.set_page_config(page_title="IME QCM Generator", layout="centered")
     st.title("IME QCM Generator (v0)")
 
-    # instantiate text regions and buttons
+    text = ""
+    reset = False
+    llm_text_generation = False
 
-    text = st.text_area(
-        'Texte (FR, court)', 
-        height = 150, 
-        placeholder = "Entrez un texte en français ici...",
-        key = "input_text")
+    if not pdf_uploaded:
+        # instantiate text regions and buttons
+
+        text = st.text_area(
+            'Texte (FR, court)', 
+            height = 150, 
+            placeholder = "Entrez un texte en français ici...",
+            key = "input_text")
 
     col1, col2 = st.columns([1,1])
     with col1:
         generate = st.button("Générer les QCM", type ="primary")
-        reset = st.button("Réinitialiser", type = "primary")
+        if not pdf_uploaded:
+            reset = st.button("Réinitialiser", type = "primary")
     with col2:
         use_llm_generation = st.toggle("Utiliser l'assistant IA pour générer le QCM", value=True)
-        llm_text_generation = st.toggle("Utiliser l'assistant IA pour générer des phrases", value=False)
+        if not pdf_uploaded:
+            llm_text_generation = st.toggle("Utiliser l'assistant IA pour générer des phrases", value=False)
         debug_mode = st.checkbox("Afficher debug", value = False)
+
 
     return text, use_llm_generation, llm_text_generation, generate, debug_mode, reset
 
@@ -173,10 +181,8 @@ def display_qcm_question(i, qcm, debug_mode = False):
 
     #st.markdown(f"*{qcm.paragraph}*")
     st.markdown(f"<div class='dyslexic'>{qcm.paragraph}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='dyslexic'> **QCM {i}:** {qcm.question}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='dyslexic'> Question {i}: {qcm.question}</div>", unsafe_allow_html=True)
 
-
-    #st.markdown(f"**QCM {i}:** {qcm.question}")
 
     keep_key = f"keep_qcm_{i}"
     edit_key = f"edit_qcm_{i}"
@@ -530,18 +536,18 @@ if st.session_state.should_generate_text:
     st.session_state.input_text = "\n \n".join(paragraphs)
     st.session_state.should_generate_text = False
 
-# instantiate buttons
-text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls()
-
 st.subheader("Importer un PDF")
 pdf_file = st.file_uploader("Uploader un PDF", type=["pdf"])
+pdf_uploaded = pdf_file is not None
 
-if pdf_file is not None:
+if pdf_uploaded:
 
     doc, doc_pages = parse_pdf(pdf_file)
     selected_sentences = render_text_from_pdf(doc, doc_pages)
 
-    
+# instantiate buttons
+text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls(pdf_uploaded)
+
 qcms = st.session_state.qcms
 
 if reset:
@@ -585,12 +591,13 @@ if generate:
                                        use_llm_generation = use_llm_generation) 
     st.session_state.qcms = qcms
 
+
 if not qcms:
-    if not st.session_state.has_generated:
-        st.info("Entrez un texte pour commencer.")
-    else:
-        st.info("Aucune question générée (texte trop court ou structure non reconnue).")
-    
+    if not pdf_uploaded:
+        if not st.session_state.has_generated:
+            st.info("Entrez un texte pour commencer.")
+        else:
+            st.info("Aucune question générée (texte trop court ou structure non reconnue).")
 else:
     st.subheader("QCM générés")
     render_qcms(qcms)
