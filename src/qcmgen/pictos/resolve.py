@@ -95,21 +95,29 @@ def _cache_path(lang: str) -> str:
 
 
 
+_MEM_CACHE: Dict[str, Dict[str, Any]] = {}
+
 def _load_cache(lang: str) -> Dict[str, Any]:
+    if lang in _MEM_CACHE:
+        return _MEM_CACHE[lang]
     path = _cache_path(lang)
     if not os.path.exists(path):
-        return {}
+        _MEM_CACHE[lang] = {}
+        return _MEM_CACHE[lang]
     try:
         with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            _MEM_CACHE[lang] = json.load(f)
+            return _MEM_CACHE[lang]
     except Exception:
-        return {}
+        _MEM_CACHE[lang] = {}
+        return _MEM_CACHE[lang]
 
 
 def _save_cache(lang: str, cache: Dict[str, Any]) -> None:
     path = _cache_path(lang)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(cache, f, ensure_ascii=False, indent=2)
+    _MEM_CACHE[lang] = cache
 
 
 def resolve_term_to_picto(term: str, lang: str = "fr", limit: int = 12, expected_type: str | None = None) -> Optional[ResolvedPicto]:
