@@ -328,81 +328,96 @@ def _download_picto_to_file(url: str) -> str | None:
     img.save(tmp.name, "JPEG")
     return tmp.name
 
-def build_pdf(qcms, picto_urls, edited_questions, selected_sources = None, doc = None) -> bytes:
-
+def build_pdf(
+    qcms,
+    picto_urls,
+    edited_questions,
+    selected_sources=None,
+    doc=None,
+    show_paragraph_each_time: bool = False,
+) -> bytes:
     pdf = FPDF(unit="mm", format="A4")
     pdf.add_font("OpenDyslexic", "", "data/open_dyslexic/OpenDyslexic3-Regular.ttf", uni=True)
-    pdf.add_font("OpenDyslexic", "B", "data/open_dyslexic/OpenDyslexic3-Bold.ttf", uni=True)  # si tu as le bold
+    pdf.add_font("OpenDyslexic", "B", "data/open_dyslexic/OpenDyslexic3-Bold.ttf", uni=True)
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
-    # parametres pour la taille des pictos affichés
     img_size = 40
-    cell_width = 50  # largeur par picto + texte
+    cell_width = 50
+    bottom_margin = 15
 
-    for i, q in enumerate(qcms, start=1):
+    groups = {}
+    group_order = []
+    for q in qcms:
+        para_key = q.paragraph_idx if q.paragraph_idx is not None else q.paragraph
+        if para_key not in groups:
+            groups[para_key] = []
+            group_order.append(para_key)
+        groups[para_key].append(q)
 
-        paragraph = q.paragraph or ""
-        question = edited_questions.get(f"edit_qcm_{i}", q.question)
+    global_index = 1
+    for para_key in group_order:
+        group_qcms = groups[para_key]
+        paragraph = group_qcms[0].paragraph or ""
 
-        bottom_margin = 15
-        if pdf.get_y() + img_size + 50 > pdf.h - bottom_margin:
+        estimated = img_size + 40 + (len(group_qcms) * (img_size + 14))
+        if pdf.get_y() + estimated > pdf.h - bottom_margin:
             pdf.add_page()
 
-        if selected_sources is not None and q.paragraph_idx is not None: # put image of context text extracted from pdf
-            idx_page, idx_doc_pages, rect = selected_sources[q.paragraph_idx]
-            page = doc[idx_page]
-            pix = page.get_pixmap(clip=rect, dpi=200)
+        context_shown = False
+        for q in group_qcms:
+            question = edited_questions.get(f"edit_qcm_{global_index}", q.question)
 
-            tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
-            pix.save(tmp.name)
+            if show_paragraph_each_time or not context_shown:
+                if selected_sources is not None and q.paragraph_idx is not None:
+                    idx_page, idx_doc_pages, rect = selected_sources[q.paragraph_idx]
+                    page = doc[idx_page]
+                    pix = page.get_pixmap(clip=rect, dpi=200)
 
-            pdf.image(tmp.name, x=pdf.get_x(), y=pdf.get_y(), w=160)
-            pdf.ln(15)  # espace sous l'image
+                    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+                    pix.save(tmp.name)
 
-            tmp.close()
-            os.unlink(tmp.name)
+                    img_w = 160
+                    img_h = img_w * (pix.height / pix.width)
+                    pdf.image(tmp.name, x=pdf.l_margin, y=pdf.get_y(), w=img_w)
+                    pdf.ln(img_h + 8)
 
-        elif paragraph:
-            pdf.set_font("OpenDyslexic", style="", size=11)
-            pdf.multi_cell(0, 6, f"Contexte: {paragraph}")
-            pdf.ln(1)
+                    tmp.close()
+                    os.unlink(tmp.name)
+                elif paragraph:
+                    pdf.set_font("OpenDyslexic", size=11)
+                    pdf.multi_cell(0, 6, f"Contexte: {paragraph}")
+                    pdf.ln(2)
 
-        pdf.set_font("OpenDyslexic", style="B", size=13)
-        pdf.multi_cell(0, 8, f"{i}. {question}")
-        pdf.ln(10)
+                context_shown = True
 
-        pdf.set_font("OpenDyslexic", size=11)
-        # Affichage des choix sur une seule ligne (4 pictos)
-        urls = picto_urls.get(i, [])
+            pdf.set_font("OpenDyslexic", style="B", size=13)
+            pdf.multi_cell(0, 8, f"{global_index}. {question}")
+            pdf.ln(6)
 
-        start_x = pdf.get_x()
-        y = pdf.get_y()
+            pdf.set_font("OpenDyslexic", size=11)
+            urls = picto_urls.get(global_index, [])
 
-        # fond blanc + bordure noire
-        pdf.set_draw_color(0, 0, 0)    # bordure noire
-        pdf.set_fill_color(255, 255, 255)  # fond blanc
-        
+            start_x = pdf.l_margin
+            y = pdf.get_y()
 
-        for j, choice in enumerate(q.choices):
-            x = start_x + j * cell_width
-            pdf.rect(x, y, img_size, img_size, style="DF")
-            pdf.set_xy(x, y)
+            pdf.set_draw_color(0, 0, 0)
+            pdf.set_fill_color(255, 255, 255)
 
-            url = urls[j] if j < len(urls) else None
-            img_path = _download_picto_to_file(url)
+            for j, choice in enumerate(q.choices):
+                x = start_x + j * cell_width
+                pdf.rect(x, y, img_size, img_size, style="DF")
 
-            if img_path:
-                pdf.image(img_path, x=x, y=y, w=img_size, h=img_size)
-                pdf.set_xy(x + img_size + 2, y + 5)
-                #pdf.cell(cell_width - img_size - 2, 6, choice)
-            #else:
-                #pdf.cell(cell_width, 6, choice)
+                url = urls[j] if j < len(urls) else None
+                img_path = _download_picto_to_file(url)
+                if img_path:
+                    pdf.image(img_path, x=x, y=y, w=img_size, h=img_size)
 
-        # sauter une ligne après la rangée
-        pdf.ln(img_size + 6)
+            pdf.ln(img_size + 8)
+            global_index += 1
 
     return pdf.output(dest="S").encode("latin1")
+
 
 def collect_selected_questions(qcms) -> list[str]:
     selected = []
