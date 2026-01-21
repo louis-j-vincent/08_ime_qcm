@@ -144,54 +144,52 @@ def generate_qcms_from_text(text: str = "",
         # load in cache answers that are not in the cache already
         cache_fr = _load_cache('fr')
 
+        filtered = []
+        counter = 0
+
         for q in qcms:
             answer = q.choices[q.answer_index]
 
-            if answer not in cache_fr:
-                resolved = resolve_term_to_picto_strict(answer, expected_type = q.qtype)
+            # toujours résoudre l'answer (cache gère le hit)
+            q.resolved_answer = resolve_term_to_picto_strict(answer, expected_type=q.qtype)
+            if q.resolved_answer is None:
+                print(f"Couldn't resolve picto for answer {answer}")
+                continue
 
-        if require_pictos:
+            expected_type = q.qtype if isinstance(q.qtype, str) else None
 
-            # Filtrer les QCM sans pictos valides
-            filtered = []
-            counter = 0
-            for q in qcms:
+            distractor_urls = [q.resolved_answer.url]
+            choices = [q.resolved_answer.term]
+            distractor_idx, nb_distractors = 0, len(q.distractors)
+            k = 4
 
-                #answer = q.choices[q.answer_index]
-                # add the first 3 distractors that return urls
-                # distractor list has already been shuffled so we don't always return the same distractors
-                expected_type = q.qtype if isinstance(q.qtype, str) else None
-                #init with only the answer
-                distractor_urls = [resolved.url]
-                choices = [resolved.term] 
-                distractor_idx, nb_distractors = 0, len(q.distractors)
-                k = 4
-                while len(distractor_urls) < k and distractor_idx < nb_distractors:
-                    url = get_picto_with_variants(q.distractors[distractor_idx], expected_type=expected_type)[1]
-                    distractor_idx += 1
-                    if url is not None: # add distractor to url
-                        distractor_urls += [url]
-                        choices += [q.distractors[distractor_idx]]
+            while len(distractor_urls) < k and distractor_idx < nb_distractors:
+                term = q.distractors[distractor_idx]
+                distractor_idx += 1
+                url = get_picto_with_variants(term, expected_type=expected_type)[1]
+                if url is not None:
+                    distractor_urls.append(url)
+                    choices.append(term)
 
-                if len(distractor_urls) == k:
+            if len(distractor_urls) == k:
+                order = list(range(len(choices)))
+                random.shuffle(order)
+                choices = [choices[i] for i in order]
+                distractor_urls = [distractor_urls[i] for i in order]
 
-                    random_order = list(range(len(choices)))
-                    random.shuffle(random_order)
-                    choices, distractor_urls = [choices[i] for i in random_order], [distractor_urls[i] for i in random_order]
+                q.choices = choices
 
-                    q.choices = choices
+                counter += 1
+                filtered.append(q)
+                st.session_state.picto_urls[counter] = distractor_urls
+            else:
+                print(f"Removing question {q.question} with choices {q.choices}")
+                print(f"urls found: {[u is not None for u in distractor_urls]}")
 
-                    counter += 1
-                    filtered.append(q)
-                    st.session_state.picto_urls[counter] = distractor_urls
 
-                else:
-                    print(f'Removing question {q.question} with choices {q.choices}')
-                    print(f'urls found: {[u is not None for u in distractor_urls]}')
+        qcms = filtered
 
-            qcms = filtered
-
-            print(len(qcms), "QCM générés après filtrage.")
+        print(len(qcms), "QCM générés après filtrage.")
 
         # Nettoyer les anciennes réponses
         for k in list(st.session_state.keys()):

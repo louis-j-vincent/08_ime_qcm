@@ -4,9 +4,7 @@ from enum import Enum
 import random
 from typing import Callable, Dict
 from qcmgen.nlp import Fact
-from qcmgen.pictos.resolve import resolve_term_to_picto, sample_cached_by_tag
-
-
+from qcmgen.pictos.resolve import resolve_term_to_picto, sample_cached_by_tag, ResolvedPicto
 
 class QuestionType(str, Enum):
     """
@@ -51,6 +49,7 @@ class QCM:
     answer_index: int
     qtype: QuestionType
     distractors: Optional[List] = None
+    resolved_answer: Optional[ResolvedPicto] = None #resolvedpicto for the answer
     paragraph_idx: Optional[int] = None
     rationale: Optional[str] = None
     paragraph: Optional[str] = None  # contexte/source
