@@ -50,6 +50,7 @@ class QCM:
     choices: List[str]
     answer_index: int
     qtype: QuestionType
+    distractors: Optional[List] = None
     paragraph_idx: Optional[int] = None
     rationale: Optional[str] = None
     paragraph: Optional[str] = None  # contexte/source

@@ -17,12 +17,14 @@ import re
 import fitz  # PyMuPDF
 from io import BytesIO
 
+import numpy as np
+import random
+
 project_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(project_root / "app"))
 
 from picto_helpers import get_picto_with_variants # robust functions to extract pictos
-
 from qcmgen.nlp import extract_facts
 from qcmgen.qcm import generate_qcms
 from qcmgen.pictos.resolve import resolve_term_to_picto_strict, _load_cache
@@ -146,7 +148,7 @@ def generate_qcms_from_text(text: str = "",
             answer = q.choices[q.answer_index]
 
             if answer not in cache_fr:
-                resolve_term_to_picto_strict(answer, expected_type = q.qtype)
+                resolved = resolve_term_to_picto_strict(answer, expected_type = q.qtype)
 
         if require_pictos:
 
@@ -154,15 +156,38 @@ def generate_qcms_from_text(text: str = "",
             filtered = []
             counter = 0
             for q in qcms:
+
+                #answer = q.choices[q.answer_index]
+                # add the first 3 distractors that return urls
+                # distractor list has already been shuffled so we don't always return the same distractors
                 expected_type = q.qtype if isinstance(q.qtype, str) else None
-                urls = [ get_picto_with_variants(c, expected_type=expected_type)[1] for c in q.choices ]
-                if all(u is not None for u in urls):
+                #init with only the answer
+                distractor_urls = [resolved.url]
+                choices = [resolved.term] 
+                distractor_idx, nb_distractors = 0, len(q.distractors)
+                k = 4
+                while len(distractor_urls) < k and distractor_idx < nb_distractors:
+                    url = get_picto_with_variants(q.distractors[distractor_idx], expected_type=expected_type)[1]
+                    distractor_idx += 1
+                    if url is not None: # add distractor to url
+                        distractor_urls += [url]
+                        choices += [q.distractors[distractor_idx]]
+
+                if len(distractor_urls) == k:
+
+                    random_order = list(range(len(choices)))
+                    random.shuffle(random_order)
+                    choices, distractor_urls = [choices[i] for i in random_order], [distractor_urls[i] for i in random_order]
+
+                    q.choices = choices
+
                     counter += 1
                     filtered.append(q)
-                    st.session_state.picto_urls[counter] = urls
+                    st.session_state.picto_urls[counter] = distractor_urls
+
                 else:
                     print(f'Removing question {q.question} with choices {q.choices}')
-                    print(f'urls found: {[u is not None for u in urls]}')
+                    print(f'urls found: {[u is not None for u in distractor_urls]}')
 
             qcms = filtered
 

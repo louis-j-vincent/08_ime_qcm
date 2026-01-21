@@ -60,18 +60,11 @@ def generate_qcms_from_text_llm(text: str | None = None,
         for question in item.get("questions", []):
 
             try:
-                # generate distractors from category
-                confusables = {c.lower() for c in question.get("confusables", []) if isinstance(c, str)}
-                answer_lower = question["answer"].lower()
-                distractor_candidates = [
-                    elt for elt in CATEGORIES[question["category"]]
-                    if elt.lower() != answer_lower and elt.lower() not in confusables
-                ]
-                distractors = random.sample(distractor_candidates, k=3)
+
+                distractors = get_distractors(question, CATEGORIES, limit = None)
 
                 choices = distractors + [question["answer"]]
                 random.shuffle(choices)
-
 
             except KeyError:
                 print(f'LLM hallucinated a new category: {question["category"]}')
@@ -79,21 +72,45 @@ def generate_qcms_from_text_llm(text: str | None = None,
 
             if choices is not None:
 
+                print('distractors:', distractors)
+
                 qcms.append(
                     QCM(
                         question=question["question"],
                         choices=choices,
                         answer_index=choices.index(question["answer"]),
                         qtype=question.get("qtype", question["category"]),
+                        distractors=distractors,
                         paragraph_idx=item.get("paragraph_index"),
                         rationale="",
                         paragraph=item["paragraph"]
                     )
                 )
 
-            print('last qcm :')
-            print(qcms[-1])
 
         all_qcms.extend(qcms)
 
     return all_qcms
+
+def get_distractors(question, CATEGORIES, limit : int | None = None):
+    """
+    Given a question, returns a list of shuffled distractors from the same category as the answer.
+    Removes distractors whose pictos could be confused with the picto of the answer because too similar (e.g balle vs ballon)
+    """
+
+    # generate distractors from category
+    confusables = {c.lower() for c in question.get("confusables", []) if isinstance(c, str)}
+    answer_lower = question["answer"].lower()
+    distractor_candidates = [
+        elt for elt in CATEGORIES[question["category"]]
+        if elt.lower() != answer_lower and elt.lower() not in confusables
+    ]
+    if limit is not None:
+        distractors = random.sample(distractor_candidates, k=3)
+    else:
+        distractors = distractor_candidates
+        random.shuffle(distractors)
+
+    return distractors
+
+
