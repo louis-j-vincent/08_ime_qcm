@@ -606,6 +606,11 @@ if pdf_uploaded:
     selected_sentences, selected_sources = render_text_from_pdf(doc, doc_pages)
     st.session_state.selected_sources = selected_sources
 
+else:
+
+    selected_sources = None
+    doc = None
+
 # instantiate buttons
 text, use_llm_generation, llm_text_generation, generate, debug_mode, reset = render_controls(pdf_uploaded)
 
