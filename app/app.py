@@ -369,7 +369,12 @@ def build_pdf(
             question = edited_questions.get(f"edit_qcm_{global_index}", q.question)
 
             if show_paragraph_each_time or not context_shown:
-                if selected_sources is not None and q.paragraph_idx is not None:
+                if (
+                    selected_sources
+                    and doc is not None
+                    and q.paragraph_idx is not None
+                    and q.paragraph_idx < len(selected_sources)
+                ):
                     idx_page, idx_doc_pages, rect = selected_sources[q.paragraph_idx]
                     page = doc[idx_page]
                     pix = page.get_pixmap(clip=rect, dpi=200)
@@ -605,10 +610,12 @@ if pdf_uploaded:
     doc, doc_pages = parse_pdf(pdf_file)
     selected_sentences, selected_sources = render_text_from_pdf(doc, doc_pages)
     st.session_state.selected_sources = selected_sources
+    st.session_state.selected_sentences = selected_sentences
 
 else:
 
-    selected_sources = None
+    st.session_state.selected_sources = []
+    st.session_state.selected_sentences = []
     doc = None
 
 # instantiate buttons
@@ -646,7 +653,7 @@ if generate:
     st.session_state.has_generated = True
     if pdf_file is not None:
         print("Generating from pdf")
-        qcms = generate_qcms_from_text(paragraphs = selected_sentences,
+        qcms = generate_qcms_from_text(paragraphs = st.session_state.selected_sentences,
                                        use_llm_generation= use_llm_generation)
 
     elif generate_text_with_llm:
@@ -668,7 +675,7 @@ if not qcms:
 else:
     st.subheader("QCM générés")
     if pdf_uploaded:
-        render_qcms(qcms, selected_sources = selected_sources, doc = doc)
+        render_qcms(qcms, selected_sources=st.session_state.selected_sources, doc=doc)
     else:
         render_qcms(qcms)
 
@@ -681,7 +688,7 @@ if st.button("Préparer le PDF"):
     st.session_state.pdf_bytes = build_pdf(selected_qcms, 
                                            st.session_state.picto_urls, 
                                            edited_questions, 
-                                           selected_sources = selected_sources,
+                                           selected_sources=st.session_state.selected_sources,
                                            doc = doc)
 
 if st.session_state.get("pdf_bytes"):
