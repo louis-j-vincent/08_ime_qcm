@@ -470,45 +470,45 @@ def extract_paragraph_bboxes(page, num_page: int = 0):
 
     gap_threshold = 8  # ajuste si besoin (plus grand = paragraphes plus longs)
 
-    for i, block in enumerate(data["blocks"]):
+    lines = []
+    for block in data["blocks"]:
         if block["type"] != 0:
             continue
-
-        prev_y1 = None
-
-        for j, line in enumerate(block["lines"]):
+        for line in block["lines"]:
             line_text = "".join(span["text"] for span in line["spans"]).strip()
             if not line_text:
                 continue
+            rect = fitz.Rect(line["bbox"])
+            lines.append((rect.y0, rect.x0, rect, line_text))
 
-            if "Lis les phrases" in line_text:
-                keep = True
-                continue
-            if not keep:
-                continue
-            if not is_valid_sentence(line_text):
-                continue
+    # Sort by visual reading order (top-to-bottom, then left-to-right)
+    lines.sort(key=lambda t: (t[0], t[1]))
 
-            y0, y1 = line["bbox"][1], line["bbox"][3]
+    prev_y1 = None
+    for y0, _x0, rect, line_text in lines:
+        if "Lis les phrases" in line_text:
+            keep = True
+            continue
+        if not keep:
+            continue
 
-            # Si gros saut vertical -> on ferme le paragraphe courant
-            if prev_y1 is not None and (y0 - prev_y1) > gap_threshold and current_text:
-                paragraphs.append((current_text.strip(), current_rect))
-                current_text = ""
-                current_rect = None
-
-            # Ajouter la ligne au paragraphe courant
-            current_text += (" " if current_text else "") + line_text
-            line_rect = fitz.Rect(line["bbox"])
-            current_rect = line_rect if current_rect is None else current_rect | line_rect
-
-            prev_y1 = y1
-
-        # fin de bloc: on ferme le paragraphe si ouvert
-        if current_text:
+        # Si gros saut vertical -> on ferme le paragraphe courant
+        if prev_y1 is not None and (y0 - prev_y1) > gap_threshold and current_text:
             paragraphs.append((current_text.strip(), current_rect))
             current_text = ""
             current_rect = None
+
+        # Ajouter la ligne au paragraphe courant
+        current_text += (" " if current_text else "") + line_text
+        current_rect = rect if current_rect is None else current_rect | rect
+
+        prev_y1 = rect.y1
+
+    # fin de bloc: on ferme le paragraphe si ouvert
+    if current_text:
+        paragraphs.append((current_text.strip(), current_rect))
+        current_text = ""
+        current_rect = None
 
     return paragraphs
 
@@ -522,6 +522,76 @@ def is_valid_sentence(sentence : str):
     is_valid &= (not any(ch in sentence for ch in forbidden)) # no forbidden character
     is_valid &= (sentence[0].isupper()) # first letter is in Capital
     return  is_valid
+
+def is_valid_paragraph(text: str) -> bool:
+    """
+    Validate a merged paragraph rather than a single line.
+    """
+    text = text.strip()
+    if not text:
+        return False
+
+    if text == "TitLine à l'école":
+        return False
+
+    if re.fullmatch(r"[.\s·•…_]+", text):
+        return False
+
+    words = text.split()
+    if len(words) <= 1:
+        return False
+
+    letters = sum(ch.isalpha() for ch in text)
+    digits = sum(ch.isdigit() for ch in text)
+    if letters == 0:
+        return False
+
+    # Reject mostly-non-letter content (lists of syllables, dots, or page numbers).
+    if letters / len(text) < 0.2 and digits > 0:
+        return False
+
+    short_tokens = sum(len(w) <= 2 for w in words)
+    if len(words) >= 5 and (short_tokens / len(words)) > 0.6:
+        return False
+
+    return True
+
+def starts_with_lowercase(text: str) -> bool:
+    for ch in text:
+        if ch.isalpha():
+            return ch.islower()
+    return False
+
+def has_min_words(text: str, min_words: int = 2) -> bool:
+    return len(text.split()) >= min_words
+
+def paragraph_rejection_reasons(text: str) -> list[str]:
+    reasons: list[str] = []
+    text = text.strip()
+    if not text:
+        return ["empty"]
+
+    if text == "TitLine à l'école":
+        reasons.append("titline_exact")
+    if re.fullmatch(r"[.\s·•…_]+", text):
+        reasons.append("dots_only")
+
+    words = text.split()
+    if len(words) <= 1:
+        reasons.append("too_few_words")
+
+    letters = sum(ch.isalpha() for ch in text)
+    digits = sum(ch.isdigit() for ch in text)
+    if letters == 0:
+        reasons.append("no_letters")
+    if letters and (letters / len(text) < 0.2 and digits > 0):
+        reasons.append("low_letter_ratio")
+
+    short_tokens = sum(len(w) <= 2 for w in words)
+    if len(words) >= 5 and (short_tokens / len(words)) > 0.6:
+        reasons.append("too_many_short_tokens")
+
+    return reasons
 
 import re
 
@@ -539,14 +609,60 @@ def parse_pdf(pdf_file):
 
     doc_pages = {}
 
+    log_lines: list[str] = []
     sentences = []
-    for i,page in enumerate(doc):
+    for i, page in enumerate(doc):
+        candidates = extract_paragraph_bboxes(page, num_page=i)
+        kept: list[tuple[str, fitz.Rect]] = []
+        reasons_by_idx: dict[int, list[str]] = {}
 
-        sentences_and_bboxes = extract_paragraph_bboxes(page, num_page = i)
-        if len(sentences_and_bboxes) > 0:
+        for idx, (text, rect) in enumerate(candidates):
+            text = text.strip()
+            reasons = paragraph_rejection_reasons(text)
+            if reasons:
+                reasons_by_idx[idx] = reasons
+                continue
 
-            sentences.extend([s[0] for s in sentences_and_bboxes])
-            doc_pages[i] = sentences_and_bboxes  # each elt of sentences_and_bboxes is (sentence,bbox)
+            if starts_with_lowercase(text):
+                if idx == 0:
+                    reasons_by_idx[idx] = ["lowercase_no_prev"]
+                    continue
+
+                prev_text, prev_rect = candidates[idx - 1]
+                prev_text = prev_text.strip()
+                prev_reasons = paragraph_rejection_reasons(prev_text)
+                if prev_reasons or not has_min_words(prev_text):
+                    reasons_by_idx[idx] = ["lowercase_prev_invalid_or_too_short"]
+                    reasons_by_idx.setdefault(idx - 1, []).append(
+                        "discarded_due_to_following_lowercase_fragment"
+                    )
+                    if kept and kept[-1][0] == prev_text:
+                        kept.pop()
+                    continue
+
+                if not kept or kept[-1][0] != prev_text:
+                    kept.append((prev_text, prev_rect))
+                kept.append((text, rect))
+            else:
+                kept.append((text, rect))
+
+        # Debug log for this page
+        log_lines.append(f"=== Page {i + 1} ===")
+        for idx, (text, _rect) in enumerate(candidates):
+            status = "KEEP" if any(k[0] == text.strip() for k in kept) else "DROP"
+            reasons = reasons_by_idx.get(idx, [])
+            reason_str = ",".join(reasons) if reasons else "ok"
+            log_lines.append(f"[{status}] idx={idx} reason={reason_str} | {text.strip()}")
+        log_lines.append("")
+
+        if kept:
+            sentences.extend([s[0] for s in kept])
+            doc_pages[i] = kept  # each elt is (sentence, bbox)
+
+    # Write debug log
+    debug_path = Path("export/phrases_filter_log.txt")
+    debug_path.parent.mkdir(parents=True, exist_ok=True)
+    debug_path.write_text("\n".join(log_lines), encoding="utf-8")
 
     return doc, doc_pages
 
