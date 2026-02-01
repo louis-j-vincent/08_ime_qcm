@@ -8,6 +8,14 @@ that remains **simple, controllable, and editable**.
 
 ---
 
+## Live Demo
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://qcm-arasaac.streamlit.app/)
+
+Or open it here: https://qcm-arasaac.streamlit.app/
+
+---
+
 ## Features (v0)
 
 - Input: short French text (< 50 words)
