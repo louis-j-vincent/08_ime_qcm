@@ -323,7 +323,15 @@ def _download_picto_to_file(url: str) -> str | None:
     if r.status_code != 200:
         return None
 
-    img = Image.open(BytesIO(r.content)).convert("RGB")
+    img = Image.open(BytesIO(r.content))
+    if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
+        # Normalize to RGBA then flatten transparency on white.
+        rgba = img.convert("RGBA")
+        bg = Image.new("RGB", rgba.size, (255, 255, 255))
+        bg.paste(rgba, mask=rgba.split()[-1])
+        img = bg
+    else:
+        img = img.convert("RGB")
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
     img.save(tmp.name, "JPEG")
     return tmp.name
