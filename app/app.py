@@ -351,7 +351,8 @@ def build_pdf(
     pdf.add_page()
 
     img_size = 40
-    cell_width = 50
+    img_pad = 2
+    cell_width = img_size + 10
     bottom_margin = 15
 
     groups = {}
@@ -424,7 +425,14 @@ def build_pdf(
                 url = urls[j] if j < len(urls) else None
                 img_path = _download_picto_to_file(url)
                 if img_path:
-                    pdf.image(img_path, x=x, y=y, w=img_size, h=img_size)
+                    inner = img_size - (2 * img_pad)
+                    pdf.image(
+                        img_path,
+                        x=x + img_pad,
+                        y=y + img_pad,
+                        w=inner,
+                        h=inner,
+                    )
 
             pdf.ln(img_size + 8)
             global_index += 1
